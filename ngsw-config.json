@@ -7,9 +7,7 @@
       "installMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/icons/Logo.svg",
-          "/assets/icons/Quizzer.svg",
-          "/assets/icons/Slogan.svg",
+          "/assets/icons/*",
           "/manifest.webmanifest",
           "/*.css",
           "/*.js"
