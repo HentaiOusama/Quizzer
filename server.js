@@ -25,6 +25,7 @@ Object.freeze(logger);
 // This practice should be avoided and be used in cases only like this.
 global["globalLoggerObject"] = logger;
 
+const mongoose = require('mongoose');
 const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
@@ -86,9 +87,20 @@ io.on('connection', (socket) => {
   });
 });
 
-const endTime = Date.now();
-logger.info("Initialization Complete in " + (endTime - startTime) / 1000 + " seconds");
+const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
+  process.env["DBClusterName"].replace(/[ ]+/g, "").toLowerCase() + ".zm0r5.mongodb.net/" + process.env["DBName"];
 
-httpServer.listen(portNumber, () => {
-  logger.info('Listening on port ' + process.env.PORT);
+mongoose.connect(mongoUrl, (err) => {
+  if (err) {
+    logger.info("DB connection error...");
+    logger.error(err);
+    return;
+  }
+
+  const endTime = Date.now();
+  logger.info("Initialization Complete in " + (endTime - startTime) / 1000 + " seconds");
+
+  httpServer.listen(portNumber, () => {
+    logger.info('Listening on port ' + process.env.PORT);
+  });
 });

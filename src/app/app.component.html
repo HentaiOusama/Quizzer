@@ -1,0 +1,10 @@
+<div class="CenterRowFlex RootContainer">
+
+  <div *ngIf="shouldShowLoadingScreen(); else mainWindow" class="LoadingImageDiv">
+    <img src="../assets/animations/Loading.svg" alt="...LOADING...">
+  </div>
+
+  <ng-template #mainWindow>
+  </ng-template>
+
+</div>

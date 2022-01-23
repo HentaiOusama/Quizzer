@@ -15,6 +15,14 @@ Following environment variables need to be set up before using this project: -
   <li><code>PORT</code></li>
 </ul>
 
+<label>For MongoDB: -</label>
+<ul>
+  <li><code>DBUsername</code></li>
+  <li><code>DBPassword</code></li>
+  <li><code>DBClusterName</code></li>
+  <li><code>DBName</code></li>
+</ul>
+
 ## Development server
 
 The root folder contains a `server.js` file.
@@ -30,7 +38,7 @@ Application can then be visited on `localhost:PORT`.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build` to build the project. The build artifacts will be stored in the `./public/` directory.
 
 ## Running unit tests
 

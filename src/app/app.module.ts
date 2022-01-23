@@ -4,10 +4,12 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import {QuizWindowComponent} from './quiz-window/quiz-window.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    QuizWindowComponent
   ],
   imports: [
     BrowserModule,
