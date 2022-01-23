@@ -1,0 +1,14 @@
+{
+  "name": "Quizzer",
+  "short_name": "Quizzer",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/icons/Logo.svg",
+      "sizes": "295x295",
+      "type": "image/svg"
+    }
+  ]
+}
