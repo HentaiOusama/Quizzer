@@ -7,6 +7,7 @@ import {environment} from '../environments/environment';
 import {QuizWindowComponent} from './components/quiz-window/quiz-window.component';
 import {RoutingService} from "./services/routing.service";
 import {HomeWindowComponent} from './components/home-window/home-window.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {HomeWindowComponent} from './components/home-window/home-window.componen
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     RoutingService,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

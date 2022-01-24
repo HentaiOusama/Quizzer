@@ -1,0 +1,20 @@
+<div class="QW-Root-Container">
+  <div [ngStyle]="{
+  'color': appComponent.currentTheme.onBackground
+  }">
+    Select the correct meaning of the {{questionWordType}} shown below.
+  </div>
+  <div class="CenterRowFlex" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface
+  }">
+    {{questionWord}}
+  </div>
+  <div class="QW-OptionHolder">
+    <div class="QW-OptionElement" *ngFor="let option of options; let i = index;">
+      <div>
+        {{option}}
+      </div>
+    </div>
+  </div>
+</div>

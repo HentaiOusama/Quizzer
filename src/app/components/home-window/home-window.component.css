@@ -1,0 +1,72 @@
+.HW-Root-Container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.HW-Wrapper {
+  width: 50%;
+  height: 75%;
+
+  border: 1px solid;
+  border-radius: 15px;
+
+  box-sizing: border-box;
+  padding: 15px;
+}
+
+form {
+  width: 100%;
+  height: 100%;
+}
+
+.HW-Form-Element {
+  height: 20%;
+  width: 100%;
+  font-size: 2em;
+}
+
+.HW-Form-Column {
+  height: 100%;
+  flex: 1 0 0;
+}
+
+.HW-CheckBox-Holder {
+  width: 100%;
+  height: 100%;
+
+  box-sizing: border-box;
+  padding: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+select {
+  height: 33%;
+  aspect-ratio: 6 / 1;
+
+  border: 0;
+  outline: 0;
+  text-align: center;
+
+  border-radius: 5px;
+}
+
+#HW-Submit-Button {
+  height: fit-content;
+  width: fit-content;
+  font-size: 3em;
+
+  border: 3px solid;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 5px 15px;
+}
+
+#HW-Submit-Button:disabled {
+  cursor: not-allowed;
+}

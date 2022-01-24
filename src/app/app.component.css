@@ -20,6 +20,8 @@
 .NavBarHolder {
   width: 100%;
   transition: all 0.5s;
+
+  border-bottom: 1px solid;
 }
 
 .NavMini {
@@ -68,4 +70,30 @@
   padding: 10px;
 
   font-size: 3em;
+}
+
+app-home-window {
+  height: 95vh;
+  max-height: 95vh;
+  width: 100%;
+  max-width: 100%;
+
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  position: relative;
+}
+
+app-quiz-window {
+  height: 95vh;
+  max-height: 95vh;
+  width: 100%;
+  max-width: 100%;
+
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  position: relative;
 }

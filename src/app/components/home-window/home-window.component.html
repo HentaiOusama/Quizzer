@@ -1,0 +1,82 @@
+<div class="CenterRowFlex HW-Root-Container">
+  <div class="HW-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <form class="CenterColumnFlex" autocomplete="off" style="justify-content: space-around;"
+          [formGroup]="userPreferenceForm" (ngSubmit)="startQuiz();">
+      <div class="CenterRowFlex HW-Form-Element">
+        <div class="CenterRowFlex HW-Form-Column">
+          <label for="qC">Number of Questions</label>
+        </div>
+        <div class="CenterRowFlex HW-Form-Column">
+          <select id="qC" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="questionCountControl">
+            <option *ngFor="let count of questionCountsList" value="{{count.value}}">{{count.label}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="CenterRowFlex HW-Form-Element">
+        <div class="CenterRowFlex HW-Form-Column">
+          <label for="qD">Duration for each Question</label>
+        </div>
+        <div class="CenterRowFlex HW-Form-Column">
+          <select id="qD" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="questionDurationControl">
+            <option *ngFor="let duration of questionDurationsList"
+                    value="{{duration.value}}">{{duration.label}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="CenterRowFlex HW-Form-Element">
+        <div class="CenterRowFlex HW-Form-Column">
+          <label for="qT">Question Types</label>
+        </div>
+        <div class="CenterRowFlex HW-Form-Column">
+          <div class="HW-CheckBox-Holder" id="qT" formGroupName="questionTypeControl">
+            <div *ngFor="let type of questionTypesList;">
+              <input id="qT-{{type.value}}" type="checkbox" value="{{type.value}}"
+                     formControlName="{{type.value + 'FormControl'}}" [ngStyle]="{
+              'background-color': appComponent.currentTheme.tertiary
+              }" style="width: 1.75em; height: 1.75em;">&nbsp;
+              <label for="qT-{{type.value}}" style="font-size: 1em;" [ngStyle]="{
+              'color': appComponent.currentTheme.onSubSurface
+              }">{{type.label}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="CenterRowFlex HW-Form-Element">
+        <div class="CenterRowFlex HW-Form-Column">
+          <label for="sA">Show Answers</label>
+        </div>
+        <div class="CenterRowFlex HW-Form-Column">
+          <select id="sA" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="showAnswerControl">
+            <option *ngFor="let showType of showAnswersList" value="{{showType.value}}">{{showType.label}}</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="HW-Submit-Button" type="submit" [disabled]="userPreferenceForm.status !== 'VALID'" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary,
+        'opacity': userPreferenceForm.status === 'VALID' ? '1' : '0.33'
+        }">Start Quiz
+      </button>
+    </form>
+
+  </div>
+</div>
