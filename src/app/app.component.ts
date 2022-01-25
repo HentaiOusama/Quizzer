@@ -3,7 +3,9 @@ import {Theme} from "./models/theme/theme.model";
 import {ThemeService} from "./services/theme-service.service";
 import {NavigationEnd, Router} from "@angular/router";
 import {GlobalProviderService} from "./services/global-provider.service";
-import {Question} from "./models/quizSet/question.model";
+import {WebStorageService} from "./services/web-storage.service";
+import {SocketIOService} from "./services/socket-io.service";
+import {QuizSet} from "./models/quizSet/quiz-set.model";
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   navType: string = "main"
   navHeight: string = "50vh";
   mainNavOpacity: string = "1";
+  isLocalStorageAvailable: boolean = false;
+  localQuizSetVersion: string | null = null;
 
   constructor(public router: Router, private changeDetectorRef: ChangeDetectorRef) {
     GlobalProviderService.appComponent = this;
@@ -37,26 +41,52 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     });
 
-    // TODO : Remove below assignment...
-    GlobalProviderService.quizSet = {
-      "A": [new Question("Q1", "A1")],
-      "B": [new Question("Q1", "A1")],
-      "C": [new Question("Q1", "A1")],
-      "D": [new Question("Q1", "A1")]
-    };
+    SocketIOService.setActionForEvent("latestQuizSetVersion", (quizSetVersion) => {
+      if (quizSetVersion === this.localQuizSetVersion) {
+        let quizSet = WebStorageService.getItemFromStorage("localStorage", "quizSet");
+        console.log("Local Quiz Set : ", typeof quizSet, quizSet);
+        if (quizSet == null) {
+          SocketIOService.emitEventToServer("sendQuizSet", null);
+        } else {
+          try {
+            GlobalProviderService.quizSet = <QuizSet>JSON.parse(quizSet);
+            GlobalProviderService.didReceiveQuizSet = true;
+            this.showLoader = false;
+            this.changeDetectorRef.detectChanges();
+          } catch {
+            SocketIOService.emitEventToServer("sendQuizSet", null);
+          }
+        }
+      } else {
+        SocketIOService.emitEventToServer("sendQuizSet", null);
+      }
+    });
+    SocketIOService.setActionForEvent("latestQuizSet", (data) => {
+      this.localQuizSetVersion = data["quizSetVersion"];
+      GlobalProviderService.quizSet = <QuizSet>data["quizSet"];
+      GlobalProviderService.didReceiveQuizSet = true;
+      if (this.isLocalStorageAvailable) {
+        WebStorageService.setItemInStorage("localStorage", "quizSetVersion", <string>this.localQuizSetVersion);
+        WebStorageService.setItemInStorage("localStorage", "quizSet", JSON.stringify(data["quizSet"]));
+      }
+      this.showLoader = false;
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   ngOnInit() {
     document.body.style.backgroundColor = this.currentTheme.background;
+    this.isLocalStorageAvailable = WebStorageService.isStorageAvailable("localStorage");
+
+    if (this.isLocalStorageAvailable) {
+      this.localQuizSetVersion = WebStorageService.getItemFromStorage("localStorage", "quizSetVersion");
+    }
+
+    SocketIOService.emitEventToServer("sendLatestQuizSetVersion", null);
   }
 
   ngAfterViewInit() {
-    this.showLoader = false;
   }
-
-  shouldShowLoadingScreen = () => {
-    return this.showLoader;
-  };
 
   showHomeWindow = () => {
     this.navHeight = "5vh";

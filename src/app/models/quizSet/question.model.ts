@@ -1,4 +1,4 @@
-export class Question {
-  constructor(public word: string, public meaning: string) {
-  }
+export interface Question {
+  word: string,
+  meaning: string
 }

@@ -2,7 +2,7 @@
 'color': currentTheme.onBackground
 }">
 
-  <div class="LoadingImageDiv" *ngIf="shouldShowLoadingScreen(); else mainWindow">
+  <div class="LoadingImageDiv" *ngIf="showLoader else mainWindow">
     <img src="../assets/animations/Loading.svg" alt="...LOADING...">
   </div>
 

@@ -25,11 +25,10 @@ Object.freeze(logger);
 // This practice should be avoided and be used in cases only like this.
 global["globalLoggerObject"] = logger;
 
-const mongoose = require('mongoose');
+const DBHandler = require('./private/DBHandler');
 const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
-const uuid = require('uuid');
 const angularJson = require('./angular.json');
 
 let portNumber = process.env["PORT"];
@@ -44,7 +43,7 @@ const outputFolder = __dirname + "/" + angularJson["projects"]["Quizzer"]["archi
 // Shutdown Handler
 const shutdownHandler = (event) => {
   logger.info("Shutdown Handler Start for " + event);
-  // TODO : Do something...
+  DBHandler.closeDBConnection();
 
   setTimeout(() => {
     logger.info("Shutdown Handler End");
@@ -78,25 +77,56 @@ app.all('*', function (req, res) {
 });
 
 let activeUsers = 0;
+let adminSocketId;
+let loggedInUsers = {};
 
 io.on('connection', (socket) => {
   activeUsers += 1;
 
+  socket.on('userLogin', (credentials) => {
+    if (typeof credentials["username"] === "string") {
+      // TODO : Fill below stuff
+
+      if (typeof credentials["sessionId"] === "string") {
+
+      } else if (typeof credentials["password"] === "string") {
+
+      }
+    }
+  });
+
+  socket.on('addNewWord', (data) => {
+    if (socket.id === adminSocketId) {
+      if (typeof data["collectionName"] === "string" && typeof data["word"] === "string" && typeof data["meaning"] === "string") {
+        DBHandler.insertNewWord(data["collectionName"], data["word"], data["meaning"]).then(() => {
+          socket.emit('addWordSuccess', data);
+        }).catch(() => {
+          socket.emit('addWordFailure', data);
+        });
+      }
+    }
+  });
+
+  socket.on('sendLatestQuizSetVersion', () => {
+    socket.emit('latestQuizSetVersion', DBHandler.getQuizSetVersion());
+  });
+
+  socket.on('sendQuizSet', () => {
+    socket.emit('latestQuizSet', {
+      "quizSetVersion": DBHandler.getQuizSetVersion(),
+      "quizSet": DBHandler.getQuizSet()
+    });
+  });
+
   socket.on('disconnect', () => {
     activeUsers -= 1;
+    if (socket.id === adminSocketId) {
+      adminSocketId = null;
+    }
   });
 });
 
-const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
-  process.env["DBClusterName"].replace(/[ ]+/g, "").toLowerCase() + ".zm0r5.mongodb.net/" + process.env["DBName"];
-
-mongoose.connect(mongoUrl, (err) => {
-  if (err) {
-    logger.info("DB connection error...");
-    logger.error(err);
-    return;
-  }
-
+DBHandler.openDBConnection(() => {
   const endTime = Date.now();
   logger.info("Initialization Complete in " + (endTime - startTime) / 1000 + " seconds");
 
