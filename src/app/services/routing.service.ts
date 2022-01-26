@@ -2,11 +2,15 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
 import {HomeWindowComponent} from "../components/home-window/home-window.component";
 import {QuizWindowComponent} from "../components/quiz-window/quiz-window.component";
+import {LogInComponent} from "../components/user/log-in/log-in.component";
+import {SignUpComponent} from "../components/user/sign-up/sign-up.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeWindowComponent},
   {path: 'quiz', component: QuizWindowComponent},
-  {path: '**', component: HomeWindowComponent}
+  {path: 'user/login', component: LogInComponent},
+  {path: 'user/signup', component: SignUpComponent},
+  {path: '**', redirectTo: 'home', component: HomeWindowComponent}
 ];
 
 @NgModule({

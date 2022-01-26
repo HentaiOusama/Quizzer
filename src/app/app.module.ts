@@ -8,12 +8,16 @@ import {QuizWindowComponent} from './components/quiz-window/quiz-window.componen
 import {RoutingService} from "./services/routing.service";
 import {HomeWindowComponent} from './components/home-window/home-window.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import {LogInComponent} from './components/user/log-in/log-in.component';
+import {SignUpComponent} from './components/user/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     QuizWindowComponent,
-    HomeWindowComponent
+    HomeWindowComponent,
+    LogInComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
