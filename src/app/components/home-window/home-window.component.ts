@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {AppComponent} from "../../app.component";
 import {GlobalProviderService} from "../../services/global-provider.service";
 import {
@@ -56,7 +56,7 @@ export class HomeWindowComponent implements OnInit {
   ];
   userPreferenceForm: FormGroup;
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {
+  constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router, private formBuilder: FormBuilder) {
     let keys = Object.keys(GlobalProviderService.quizSet);
 
     for (let key of keys) {
@@ -85,6 +85,10 @@ export class HomeWindowComponent implements OnInit {
         Validators.required
       )
     });
+
+    this.userPreferenceForm.valueChanges.subscribe(() => {
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   ngOnInit(): void {
@@ -110,10 +114,10 @@ export class HomeWindowComponent implements OnInit {
     if (this.userPreferenceForm.status !== "VALID") {
       return;
     }
-    GlobalProviderService.questionCount = parseInt(this.userPreferenceForm.controls["questionCountControl"].value)
-    GlobalProviderService.questionDuration = parseInt(this.userPreferenceForm.controls["questionDurationControl"].value);
+    GlobalProviderService.questionCount = parseInt(this.userPreferenceForm.value["questionCountControl"])
+    GlobalProviderService.questionDuration = parseInt(this.userPreferenceForm.value["questionDurationControl"]);
     GlobalProviderService.questionTypes = [];
-    GlobalProviderService.showAnswers = this.userPreferenceForm.controls["showAnswerControl"].value === "true";
+    GlobalProviderService.showAnswers = this.userPreferenceForm.value["showAnswerControl"] === "true";
 
     let maxPossibleQuestions = 0;
     let questionTypeFormGroup = <FormGroup>this.userPreferenceForm.controls["questionTypeControl"];

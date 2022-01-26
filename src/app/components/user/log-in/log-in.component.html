@@ -1,0 +1,67 @@
+<div class="CenterRowFlex LI-Root-Container">
+  <div class="LI-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <form class="CenterColumnFlex" autocomplete="on" style="justify-content: space-around;"
+          [formGroup]="logInForm" (ngSubmit)="sendLogInInfoToServer();">
+      <div class="CenterRowFlex LI-Form-Element" *ngIf="logInErrorReason !== ''">
+        <div class="CenterRowFlex LI-ErrorHolder">
+          {{logInErrorReason}}
+        </div>
+      </div>
+      <div class="CenterRowFlex LI-Form-Element">
+        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-end;">
+          <label for="uE">Email&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input id="uE" type="email" autocomplete="on" placeholder="Email" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="emailControl">
+        </div>
+      </div>
+
+      <div class="CenterRowFlex LI-Form-Element">
+        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-end;">
+          <label for="uP">Password&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input id="uP" type="password" autocomplete="on" placeholder="Password" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="passwordControl">
+        </div>
+      </div>
+
+      <div class="CenterRowFlex LI-Form-Element">
+        <input id="rM" type="checkbox" formControlName="rememberControl" [ngStyle]="{
+        'background-color': appComponent.currentTheme.tertiary
+        }" style="width: 1.25em; height: 1.25em;">&nbsp;
+        <label for="rM" style="font-size: 0.5em;" [ngStyle]="{
+        'color': appComponent.currentTheme.onSubSurface
+        }">Remember Me</label>
+      </div>
+
+      <div class="CenterColumnFlex" style="height: fit-content; width: fit-content;">
+        <button id="LI-Submit-Button" type="submit" [disabled]="logInForm.status !== 'VALID'" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary,
+        'opacity': logInForm.status === 'VALID' ? '1' : '0.33'
+        }">Log In
+        </button>
+        <div style="height: 5px;"></div>
+        <div>
+          Don't have an account?&nbsp;
+          <a style="color: aqua" routerLink="/user/signup" routerLinkActive="active-link">Sign up</a>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

@@ -95,6 +95,7 @@ io.on('connection', (socket) => {
 
   socket.on('userLogin', async (credentials) => {
     if (typeof credentials["userMail"] === "string") {
+      credentials["userMail"] = credentials["userMail"].toLowerCase();
       let result;
       if (typeof credentials["sessionId"] === "string") {
         result = await logInUserFromSessionId(socket.id, credentials["userMail"], credentials["sessionId"]);

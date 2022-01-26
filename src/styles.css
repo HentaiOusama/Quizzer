@@ -7,6 +7,10 @@ html body {
   margin: 0;
 }
 
+body {
+  font-family: Cambria, serif;
+}
+
 .CenterRowFlex {
   display: flex;
   flex-direction: row;

@@ -47,8 +47,6 @@
   font-family: inherit;
 
   border: 1px solid;
-  border-radius: 5px;
-
   cursor: pointer;
 }
 
@@ -70,13 +68,13 @@
   display: flex;
   justify-content: center;
 
-  transition: opacity ease-out 0.4s;
+  transition: opacity 0.4s;
 
   position: absolute;
-  top: 50%;
+  top: 50vh;
   left: 0;
-  right: 100%;
-  bottom: 100%;
+  right: 100vw;
+  bottom: 100vh;
 }
 
 .EnterHomeButton {
@@ -91,10 +89,37 @@
   padding: 10px;
 
   font-size: 3em;
+  font-family: inherit;
   cursor: pointer;
 }
 
 app-home-window {
+  height: 95vh;
+  max-height: 95vh;
+  width: 100%;
+  max-width: 100%;
+
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  position: relative;
+}
+
+app-log-in {
+  height: 95vh;
+  max-height: 95vh;
+  width: 100%;
+  max-width: 100%;
+
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  position: relative;
+}
+
+app-sign-up {
   height: 95vh;
   max-height: 95vh;
   width: 100%;

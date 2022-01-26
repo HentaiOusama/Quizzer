@@ -6,6 +6,7 @@ import {GlobalProviderService} from "./services/global-provider.service";
 import {WebStorageService} from "./services/web-storage.service";
 import {SocketIOService} from "./services/socket-io.service";
 import {QuizSet} from "./models/quizSet/quiz-set.model";
+import {CookieService} from "./services/cookie.service";
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   isLocalStorageAvailable: boolean = false;
   localQuizSetVersion: string | null = null;
   isUserLoggedIn: boolean = false;
+  isUserAdmin: boolean = false;
+  logInText: string = "Log In";
 
   constructor(public router: Router, private changeDetectorRef: ChangeDetectorRef) {
     GlobalProviderService.appComponent = this;
@@ -72,16 +75,52 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.showLoader = false;
       this.changeDetectorRef.detectChanges();
     });
+    SocketIOService.setActionForEvent("adminPrivilegeGranted", () => {
+      this.isUserAdmin = true;
+      this.changeDetectorRef.detectChanges();
+    });
+    SocketIOService.setActionForEvent("loginSuccess", (data) => {
+      this.logInText = data["userMail"].substring(0, 2).toUpperCase();
+      this.isUserLoggedIn = true;
+      if (data["newSessionId"] != null && this.isLocalStorageAvailable) {
+        CookieService.setCookie({
+          "name": "userMail",
+          "value": data["userMail"],
+          "expireDays": 15
+        });
+        CookieService.setCookie({
+          "name": "sessionId",
+          "value": data["newSessionId"],
+          "expireDays": 15
+        });
+        this.changeDetectorRef.detectChanges();
+      }
+
+      if (this.router.url !== "/") {
+        this.router.navigate(["/home"]).then().catch((err) => {
+          console.log("Error when redirecting to home after login success");
+          console.log(err);
+        });
+      }
+    });
   }
 
   ngOnInit() {
     document.body.style.backgroundColor = this.currentTheme.background;
-    this.isLocalStorageAvailable = WebStorageService.isStorageAvailable("localStorage");
 
+    let userMail = CookieService.getCookie("userMail");
+    if (userMail != null && userMail !== "") {
+      let sessionId = CookieService.getCookie("sessionId");
+      SocketIOService.emitEventToServer("userLogin", {
+        userMail,
+        sessionId
+      });
+    }
+
+    this.isLocalStorageAvailable = WebStorageService.isStorageAvailable("localStorage");
     if (this.isLocalStorageAvailable) {
       this.localQuizSetVersion = WebStorageService.getItemFromStorage("localStorage", "quizSetVersion");
     }
-
     SocketIOService.emitEventToServer("sendLatestQuizSetVersion", null);
   }
 
@@ -91,6 +130,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   showHomeWindow = () => {
     this.navHeight = "5vh";
     this.mainNavOpacity = "0";
+    this.changeDetectorRef.detectChanges();
+
     setTimeout(() => {
       this.navType = "mini";
       this.changeDetectorRef.detectChanges();
@@ -99,12 +140,23 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.log("Error while routing to home");
         console.log(err);
       });
-    }, 450);
+    }, 550);
   };
 
-  goToLoginPage = () => {
-    this.router.navigate(['/user/login']).then().catch((err) => {
-      console.log("Error while routing to Log in Page");
+  logInButtonAction = () => {
+    if (!this.isUserLoggedIn) {
+      this.router.navigate(['/user/login']).then().catch((err) => {
+        console.log("Error while routing to Log in Page");
+        console.log(err);
+      });
+    } else {
+      // TODO : Show floating div with options. Like log out.
+    }
+  };
+
+  goToHome = () => {
+    this.router.navigate(['/home']).then().catch((err) => {
+      console.log("Error while routing to home");
       console.log(err);
     });
   };

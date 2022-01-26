@@ -52,7 +52,7 @@ class TwoWayMap {
  * @return {string}
  */
 const sha256 = (data) => {
-  return createHash('sha256').update(data).digest('hex').toString();
+  return createHash('sha256').update(data).digest('hex').toString().toUpperCase();
 };
 
 let adminSocketId = null;
@@ -86,6 +86,7 @@ const logInUserFromSessionId = async (socketId, userMail, sessionId) => {
 
   return {
     success,
+    userMail,
     reason,
     newSessionId
   };
@@ -117,6 +118,7 @@ const logInUserFromPassword = async (socketId, userMail, password, createSession
 
   return {
     success,
+    userMail,
     reason,
     newSessionId
   };

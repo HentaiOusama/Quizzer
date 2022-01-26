@@ -60,6 +60,7 @@ select {
   height: fit-content;
   width: fit-content;
   font-size: 3em;
+  font-family: inherit;
 
   border: 3px solid;
   border-radius: 10px;
