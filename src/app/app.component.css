@@ -70,6 +70,7 @@
   padding: 10px;
 
   font-size: 3em;
+  cursor: pointer;
 }
 
 app-home-window {

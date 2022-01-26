@@ -34,9 +34,9 @@ const {
 } = require('./private/DBHandler');
 const {
   hasAdminPrivileges,
-  unSetAdmin,
   logInUserFromSessionId,
-  logInUserFromPassword
+  logInUserFromPassword,
+  logOutUser
 } = require('./private/UserHandler');
 const express = require('express');
 const http = require('http');
@@ -92,8 +92,6 @@ let activeUsers = 0;
 
 io.on('connection', (socket) => {
   activeUsers += 1;
-  let clientIpAddress = socket.handshake.address["address"];
-  console.log(clientIpAddress);
 
   socket.on('userLogin', async (credentials) => {
     if (typeof credentials["userMail"] === "string") {
@@ -106,6 +104,10 @@ io.on('connection', (socket) => {
 
       if (result["success"]) {
         socket.emit('loginSuccess', result);
+
+        if (hasAdminPrivileges(socket.id)) {
+          socket.emit('adminPrivilegeGranted');
+        }
       } else {
         socket.emit('loginUnsuccessful', result["reason"]);
       }
@@ -137,9 +139,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     activeUsers -= 1;
-    if (hasAdminPrivileges(socket.id)) {
-      unSetAdmin();
-    }
+    logOutUser(socket.id);
   });
 });
 

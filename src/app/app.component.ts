@@ -44,7 +44,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     SocketIOService.setActionForEvent("latestQuizSetVersion", (quizSetVersion) => {
       if (quizSetVersion === this.localQuizSetVersion) {
         let quizSet = WebStorageService.getItemFromStorage("localStorage", "quizSet");
-        console.log("Local Quiz Set : ", typeof quizSet, quizSet);
         if (quizSet == null) {
           SocketIOService.emitEventToServer("sendQuizSet", null);
         } else {

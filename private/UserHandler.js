@@ -61,9 +61,6 @@ const socketToUserMailMapping = new TwoWayMap({});
 const hasAdminPrivileges = (socketId) => {
   return socketId === adminSocketId;
 };
-const unSetAdmin = () => {
-  adminSocketId = null;
-};
 
 const logInUserFromSessionId = async (socketId, userMail, sessionId) => {
   let success = false, reason = null, newSessionId = null;
@@ -124,6 +121,12 @@ const logInUserFromPassword = async (socketId, userMail, password, createSession
     newSessionId
   };
 };
+const logOutUser = (socketId) => {
+  if (socketId === adminSocketId) {
+    adminSocketId = null;
+  }
+  socketToUserMailMapping.unsetWithKey(socketId);
+};
 
 // TODO :  Complete below functions
 const signUpNewUser = () => {
@@ -133,9 +136,9 @@ const verifyNewUser = () => {
 
 module.exports = {
   hasAdminPrivileges,
-  unSetAdmin,
   logInUserFromSessionId,
   logInUserFromPassword,
+  logOutUser,
   signUpNewUser,
   verifyNewUser
 };

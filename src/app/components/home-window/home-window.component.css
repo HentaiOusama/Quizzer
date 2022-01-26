@@ -65,6 +65,8 @@ select {
   border-radius: 10px;
   box-sizing: border-box;
   padding: 5px 15px;
+
+  cursor: pointer;
 }
 
 #HW-Submit-Button:disabled {
