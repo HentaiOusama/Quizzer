@@ -25,7 +25,19 @@ Object.freeze(logger);
 // This practice should be avoided and be used in cases only like this.
 global["globalLoggerObject"] = logger;
 
-const DBHandler = require('./private/DBHandler');
+const {
+  closeDBConnection,
+  getQuizSetVersion,
+  getQuizSet,
+  insertNewWord,
+  openDBConnection
+} = require('./private/DBHandler');
+const {
+  hasAdminPrivileges,
+  unSetAdmin,
+  logInUserFromSessionId,
+  logInUserFromPassword
+} = require('./private/UserHandler');
 const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
@@ -43,7 +55,7 @@ const outputFolder = __dirname + "/" + angularJson["projects"]["Quizzer"]["archi
 // Shutdown Handler
 const shutdownHandler = (event) => {
   logger.info("Shutdown Handler Start for " + event);
-  DBHandler.closeDBConnection();
+  closeDBConnection();
 
   setTimeout(() => {
     logger.info("Shutdown Handler End");
@@ -77,28 +89,33 @@ app.all('*', function (req, res) {
 });
 
 let activeUsers = 0;
-let adminSocketId;
-let loggedInUsers = {};
 
 io.on('connection', (socket) => {
   activeUsers += 1;
+  let clientIpAddress = socket.handshake.address["address"];
+  console.log(clientIpAddress);
 
-  socket.on('userLogin', (credentials) => {
-    if (typeof credentials["username"] === "string") {
-      // TODO : Fill below stuff
-
+  socket.on('userLogin', async (credentials) => {
+    if (typeof credentials["userMail"] === "string") {
+      let result;
       if (typeof credentials["sessionId"] === "string") {
-
+        result = await logInUserFromSessionId(socket.id, credentials["userMail"], credentials["sessionId"]);
       } else if (typeof credentials["password"] === "string") {
+        result = await logInUserFromPassword(socket.id, credentials["userMail"], credentials["password"], credentials["rememberMe"] === true);
+      }
 
+      if (result["success"]) {
+        socket.emit('loginSuccess', result);
+      } else {
+        socket.emit('loginUnsuccessful', result["reason"]);
       }
     }
   });
 
   socket.on('addNewWord', (data) => {
-    if (socket.id === adminSocketId) {
+    if (hasAdminPrivileges(socket.id)) {
       if (typeof data["collectionName"] === "string" && typeof data["word"] === "string" && typeof data["meaning"] === "string") {
-        DBHandler.insertNewWord(data["collectionName"], data["word"], data["meaning"]).then(() => {
+        insertNewWord(data["collectionName"], data["word"], data["meaning"]).then(() => {
           socket.emit('addWordSuccess', data);
         }).catch(() => {
           socket.emit('addWordFailure', data);
@@ -108,25 +125,25 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendLatestQuizSetVersion', () => {
-    socket.emit('latestQuizSetVersion', DBHandler.getQuizSetVersion());
+    socket.emit('latestQuizSetVersion', getQuizSetVersion());
   });
 
   socket.on('sendQuizSet', () => {
     socket.emit('latestQuizSet', {
-      "quizSetVersion": DBHandler.getQuizSetVersion(),
-      "quizSet": DBHandler.getQuizSet()
+      "quizSetVersion": getQuizSetVersion(),
+      "quizSet": getQuizSet()
     });
   });
 
   socket.on('disconnect', () => {
     activeUsers -= 1;
-    if (socket.id === adminSocketId) {
-      adminSocketId = null;
+    if (hasAdminPrivileges(socket.id)) {
+      unSetAdmin();
     }
   });
 });
 
-DBHandler.openDBConnection(() => {
+openDBConnection(() => {
   const endTime = Date.now();
   logger.info("Initialization Complete in " + (endTime - startTime) / 1000 + " seconds");
 

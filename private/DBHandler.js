@@ -1,6 +1,6 @@
 "use strict";
 
-const {MongoClient, Db} = require('mongodb');
+const {MongoClient, Db, WithId} = require('mongodb');
 const logger = global["globalLoggerObject"];
 
 const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
@@ -79,6 +79,34 @@ const insertNewWord = async (collectionName, word, meaning) => {
   quizSet[collectionName][word] = meaning;
 };
 
+/**
+ * @typedef {Object} UserDoc
+ * @property {string} [passwordHash]
+ * @property {boolean} [isMailVerified]
+ * @property {string} [sessionIdHash]
+ * @property {number} [maxSessionTime]
+ * */
+
+/**
+ * Function to add / update information about user
+ * @param userMail {string}
+ * @param options {UserDoc}
+ * @return {Promise<void>}
+ */
+const saveUserData = async (userMail, options) => {
+  options["userMail"] = userMail;
+  await collectionSet["UserBase"].updateOne({userMail}, {"$set": options}, {"upsert": true});
+};
+
+/**
+ * Function to fetch user information from database.
+ * @param userMail
+ * @return {Promise<WithId | null>}
+ */
+const getUserData = async (userMail) => {
+  return await collectionSet["UserBase"].findOne({userMail});
+};
+
 const closeDBConnection = () => {
   if (mongoClient != null) {
     mongoClient.close().then(() => {
@@ -95,6 +123,7 @@ module.exports = {
   getQuizSetVersion,
   getQuizSet,
   insertNewWord,
-  openDBConnection,
-  quizSet
+  saveUserData,
+  getUserData,
+  openDBConnection
 };
