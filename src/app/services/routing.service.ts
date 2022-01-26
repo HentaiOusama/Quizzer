@@ -6,6 +6,7 @@ import {LogInComponent} from "../components/user/log-in/log-in.component";
 import {SignUpComponent} from "../components/user/sign-up/sign-up.component";
 
 const routes: Routes = [
+  {path: '', component: HomeWindowComponent},
   {path: 'home', component: HomeWindowComponent},
   {path: 'quiz', component: QuizWindowComponent},
   {path: 'user/login', component: LogInComponent},

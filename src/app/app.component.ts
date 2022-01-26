@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   mainNavOpacity: string = "1";
   isLocalStorageAvailable: boolean = false;
   localQuizSetVersion: string | null = null;
+  isUserLoggedIn: boolean = false;
 
   constructor(public router: Router, private changeDetectorRef: ChangeDetectorRef) {
     GlobalProviderService.appComponent = this;
@@ -99,5 +100,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.log(err);
       });
     }, 450);
+  };
+
+  goToLoginPage = () => {
+    this.router.navigate(['/user/login']).then().catch((err) => {
+      console.log("Error while routing to Log in Page");
+      console.log(err);
+    });
   };
 }

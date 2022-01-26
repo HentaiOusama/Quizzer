@@ -3,6 +3,7 @@
   height: 100%;
 
   position: relative;
+  z-index: 0;
 }
 
 .LoadingImageDiv {
@@ -22,13 +23,33 @@
   transition: all 0.5s;
 
   border-bottom: 1px solid;
+  position: absolute;
+  z-index: 1;
 }
 
 .NavMini {
+  width: 100%;
   height: 100%;
   display: block;
   box-sizing: border-box;
-  padding: 7px 20px;
+  padding: 5px 20px;
+  font-size: 1.3em;
+}
+
+.NB-LoginButton {
+  height: 100%;
+  width: fit-content;
+
+  box-sizing: border-box;
+  padding: 0 15px;
+  font-weight: bold;
+  font-size: inherit;
+  font-family: inherit;
+
+  border: 1px solid;
+  border-radius: 5px;
+
+  cursor: pointer;
 }
 
 .NavMain {
