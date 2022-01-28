@@ -1,7 +1,15 @@
 "use strict";
 
-const {MongoClient, Db, WithId} = require('mongodb');
+/**
+ * @typedef {Object} UserDoc
+ * @property {string} [passwordHash]
+ * @property {boolean} [isMailVerified]
+ * @property {string} [sessionIdHash]
+ * @property {number} [maxSessionTime]
+ * */
+
 const logger = global["globalLoggerObject"];
+const {MongoClient, Db, WithId} = require('mongodb');
 
 const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
   process.env["DBClusterName"].replace(/[ ]+/g, "").toLowerCase() + ".zm0r5.mongodb.net/" + process.env["DBName"];
@@ -48,7 +56,6 @@ const openDBConnection = (callback) => {
 const getQuizSetVersion = () => {
   return quizSetVersion;
 };
-
 const getQuizSet = () => {
   return quizSet;
 };
@@ -78,14 +85,6 @@ const insertNewWord = async (collectionName, word, meaning) => {
   });
   quizSet[collectionName][word] = meaning;
 };
-
-/**
- * @typedef {Object} UserDoc
- * @property {string} [passwordHash]
- * @property {boolean} [isMailVerified]
- * @property {string} [sessionIdHash]
- * @property {number} [maxSessionTime]
- * */
 
 /**
  * Function to add / update information about user

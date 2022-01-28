@@ -36,7 +36,7 @@ const {
   hasAdminPrivileges,
   logInUserFromSessionId,
   logInUserFromPassword,
-  logOutUser
+  logOutUser, signUpNewUser
 } = require('./private/UserHandler');
 const express = require('express');
 const http = require('http');
@@ -89,13 +89,20 @@ app.all('*', function (req, res) {
 });
 
 let activeUsers = 0;
+const validateUserMail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+    )[0];
+};
 
 io.on('connection', (socket) => {
   activeUsers += 1;
 
   socket.on('userLogin', async (credentials) => {
-    if (typeof credentials["userMail"] === "string") {
-      credentials["userMail"] = credentials["userMail"].toLowerCase();
+    try {
+      credentials["userMail"] = validateUserMail(credentials["userMail"]);
       let result;
       if (typeof credentials["sessionId"] === "string") {
         result = await logInUserFromSessionId(socket.id, credentials["userMail"], credentials["sessionId"]);
@@ -112,6 +119,8 @@ io.on('connection', (socket) => {
       } else {
         socket.emit('loginUnsuccessful', result["reason"]);
       }
+    } catch {
+      socket.emit("loginUnsuccessful", "Invalid UserMail");
     }
   });
 
