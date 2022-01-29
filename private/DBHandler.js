@@ -10,6 +10,7 @@
 
 const logger = global["globalLoggerObject"];
 const {MongoClient, Db, WithId} = require('mongodb');
+const {initializeUserHandler} = require('./UserHandler');
 
 const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
   process.env["DBClusterName"].replace(/[ ]+/g, "").toLowerCase() + ".zm0r5.mongodb.net/" + process.env["DBName"];
@@ -37,7 +38,19 @@ const openDBConnection = (callback) => {
         collectionSet[collectionName] = quizzerDatabase.collection(collectionName);
 
         if (collectionName === "_Root") {
-          // TODO : Some work
+          let mailVerificationDoc = collectionSet[collectionName].findOne({"identifier": "mailVerification"});
+          let mailVerificationCredentials = {
+            "jwtSecret": mailVerificationDoc["jwtSecret"],
+            "gmailAddress": mailVerificationDoc["gmailAddress"],
+            "GOOGLE_CLIENT_ID": mailVerificationDoc["GOOGLE_CLIENT_ID"],
+            "GOOGLE_CLIENT_SECRET": mailVerificationDoc["GOOGLE_CLIENT_SECRET"],
+            "GOOGLE_REDIRECT_URI": mailVerificationDoc["GOOGLE_REDIRECT_URI"],
+            "GOOGLE_REFRESH_TOKEN": mailVerificationDoc["GOOGLE_REFRESH_TOKEN"]
+          };
+          Object.freeze(mailVerificationCredentials);
+          initializeUserHandler(mailVerificationCredentials);
+
+          // TODO : Do more work as necessary...
         } else if (collectionName !== "UserBase") {
           quizSet[collectionName] = {};
           collectionSet[collectionName].find().forEach((document) => {

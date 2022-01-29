@@ -10,6 +10,7 @@ import {HomeWindowComponent} from './components/home-window/home-window.componen
 import {ReactiveFormsModule} from "@angular/forms";
 import {LogInComponent} from './components/user/log-in/log-in.component';
 import {SignUpComponent} from './components/user/sign-up/sign-up.component';
+import {VerifyComponent} from './components/user/verify/verify.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {SignUpComponent} from './components/user/sign-up/sign-up.component';
     QuizWindowComponent,
     HomeWindowComponent,
     LogInComponent,
-    SignUpComponent
+    SignUpComponent,
+    VerifyComponent
   ],
   imports: [
     BrowserModule,

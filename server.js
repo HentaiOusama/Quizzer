@@ -124,6 +124,27 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('userSignup', async (credentials) => {
+    try {
+      credentials["userMail"] = validateUserMail(credentials["userMail"]);
+      if (typeof credentials["password"] === "string") {
+        let result = await signUpNewUser(credentials["userMail"], credentials["password"]);
+
+        if (result["success"]) {
+          socket.emit("signupSuccess");
+        } else {
+          socket.emit("signupUnsuccessful", result["reason"]);
+        }
+      }
+    } catch {
+      socket.emit("signupUnsuccessful", "Invalid UserMail");
+    }
+  });
+
+  socket.on('userVerification', () => {
+    // TODO : Complete this...
+  });
+
   socket.on('addNewWord', (data) => {
     if (hasAdminPrivileges(socket.id)) {
       if (typeof data["collectionName"] === "string" && typeof data["word"] === "string" && typeof data["meaning"] === "string") {

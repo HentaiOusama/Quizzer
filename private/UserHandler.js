@@ -1,8 +1,12 @@
 "use strict";
 
+const logger = global["globalLoggerObject"];
 const {saveUserData, getUserData} = require('./DBHandler');
 const {createHash} = require('crypto');
 const uuid = require('uuid');
+const nodemailer = require('nodemailer');
+const {google} = require('googleapis');
+const jwt = require('jsonwebtoken');
 
 class TwoWayMap {
   constructor(keyMap) {
@@ -54,10 +58,79 @@ class TwoWayMap {
 const sha256 = (data) => {
   return createHash('sha256').update(data).digest('hex').toString().toUpperCase();
 };
+const generateJWTToken = (userMail) => {
+  return jwt.sign({
+    userMail,
+    jwtSecretKey
+  }, jwtSecretKey, {
+    expiresIn: 10 * 60,
+    algorithm: 'RS256'
+  });
+};
+const verifyJWTToken = (jwtToken) => {
+  let success = false, userMail = null, reason = null;
+  try {
+    let data = jwt.verify(jwtToken, jwtSecretKey, {
+      algorithm: 'RS256'
+    });
+
+    if (data["jwtSecret"] === jwtSecretKey) {
+      success = true;
+      userMail = data["userMail"];
+    } else {
+      reason = "Invalid Token";
+    }
+  } catch (err) {
+    reason = err.toString();
+  }
+
+  return {
+    success,
+    reason,
+    userMail
+  };
+};
+
+const websiteURL = process.env["websiteURL"];
+let mailVerificationCredentials;
+let oAuth2Client;
+let jwtSecretKey;
+const initializeUserHandler = (mVC) => {
+  mailVerificationCredentials = mVC;
+  jwtSecretKey = mVC["jwtSecret"];
+  oAuth2Client = new google.auth.OAuth2(
+    mVC["GOOGLE_CLIENT_ID"],
+    mVC["GOOGLE_CLIENT_SECRET"],
+    mVC["GOOGLE_REDIRECT_URI"]
+  );
+  oAuth2Client.setCredentials({"refresh_token": mVC["GOOGLE_REFRESH_TOKEN"]});
+};
+const sendVerificationEmail = async (userMail, jwtToken) => {
+  const transport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: 'OAuth2',
+      user: mailVerificationCredentials["gmailAddress"],
+      clientId: mailVerificationCredentials["GOOGLE_CLIENT_ID"],
+      clientSecret: mailVerificationCredentials["GOOGLE_CLIENT_SECRET"],
+      refreshToken: mailVerificationCredentials["GOOGLE_REFRESH_TOKEN"],
+      accessToken: await oAuth2Client.getAccessToken()
+    }
+  });
+
+  const mailData = {
+    from: "Quizzer Contact " + mailVerificationCredentials["gmailAddress"],
+    to: userMail,
+    subject: "Quizzer Account Verification",
+    text: "Please click on the link below to verify your account. This link is only valid for 8 minutes.\n\n" +
+      websiteURL + "user/verify/" + jwtToken
+  };
+
+  await transport.sendMail(mailData, () => {
+  });
+};
 
 let adminSocketId = null;
-const socketToUserMailMapping = new TwoWayMap({});
-
 const hasAdminPrivileges = (socketId) => {
   return socketId === adminSocketId;
 };
@@ -130,13 +203,68 @@ const logOutUser = (socketId) => {
   socketToUserMailMapping.unsetWithKey(socketId);
 };
 
-// TODO :  Complete below functions
-const signUpNewUser = () => {
+const signingUpUsers = {};
+const socketToUserMailMapping = new TwoWayMap({});
+const signUpNewUser = async (userMail, password) => {
+  let success = false, reason = null;
+  if (signingUpUsers[userMail]) {
+    reason = "Sign up already underway";
+  } else {
+    signingUpUsers[userMail] = true;
+    let userData = await getUserData(userMail);
+    if (userData == null) {
+      await saveUserData(userMail, {
+        "passwordHash": sha256(password),
+        "isMailVerified": false
+      });
+
+      let jwtToken = await generateJWTToken(userMail);
+      sendVerificationEmail(userMail, jwtToken).then().catch((err) => {
+        logger.error("Error when sending verification mail");
+        logger.error(err);
+      });
+
+      success = true;
+    } else {
+      reason = "User Already Exists";
+    }
+    delete signingUpUsers[userMail];
+  }
+
+  return {
+    success,
+    reason
+  };
 };
-const verifyNewUser = () => {
+const verifyNewUser = async (jwtToken) => {
+  let success = false, reason = null;
+  let verificationResult = verifyJWTToken(jwtToken);
+  if (verificationResult["success"]) {
+    let userMail = verificationResult["userMail"];
+    let userDoc = await getUserData(userMail);
+
+    if (userDoc == null || userMail == null) {
+      reason = "No such user exists";
+    } else if (userDoc["isMailVerified"]) {
+      reason = "UserMail already verified";
+    } else {
+      await saveUserData(userMail.toString(), {
+        "isMailVerified": true
+      });
+      success = true;
+    }
+  } else {
+    reason = verificationResult["reason"];
+  }
+
+  return {
+    success,
+    reason
+  };
 };
 
 module.exports = {
+  initializeUserHandler,
   hasAdminPrivileges,
   logInUserFromSessionId,
   logInUserFromPassword,
