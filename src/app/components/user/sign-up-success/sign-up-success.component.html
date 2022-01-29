@@ -1,0 +1,29 @@
+<div class="CenterRowFlex SUS-Root-Container">
+  <div class="SUS-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <div class="CenterColumnFlex SUS-Data-Wrapper" style="justify-content: space-around;">
+      <div class="CenterColumnFlex SU-Form-Element" style="text-align: center;">
+        Sign Up Successful.
+        <br><br>
+        Please verify your email using the verification mail sent to the registered email.
+        <br><br>
+        Once verified, you can proceed to log in.
+      </div>
+
+      <div class="CenterColumnFlex" style="height: fit-content; width: fit-content;">
+        <button id="SUS-Submit-Button" (click)="goToLogInPage()" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary
+        }">Log In
+        </button>
+        <div style="height: 5px;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>

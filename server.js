@@ -26,13 +26,14 @@ Object.freeze(logger);
 global["globalLoggerObject"] = logger;
 
 const {
-  closeDBConnection,
+  openDBConnection,
   getQuizSetVersion,
   getQuizSet,
   insertNewWord,
-  openDBConnection
+  closeDBConnection, getMVC
 } = require('./private/DBHandler');
 const {
+  initializeUserHandler,
   hasAdminPrivileges,
   logInUserFromSessionId,
   logInUserFromPassword,
@@ -128,12 +129,15 @@ io.on('connection', (socket) => {
     try {
       credentials["userMail"] = validateUserMail(credentials["userMail"]);
       if (typeof credentials["password"] === "string") {
-        let result = await signUpNewUser(credentials["userMail"], credentials["password"]);
-
-        if (result["success"]) {
-          socket.emit("signupSuccess");
-        } else {
-          socket.emit("signupUnsuccessful", result["reason"]);
+        try {
+          let result = await signUpNewUser(credentials["userMail"], credentials["password"]);
+          if (result["success"]) {
+            socket.emit("signupSuccess");
+          } else {
+            socket.emit("signupUnsuccessful", result["reason"]);
+          }
+        } catch (err) {
+          console.log(err);
         }
       }
     } catch {
@@ -175,6 +179,8 @@ io.on('connection', (socket) => {
 });
 
 openDBConnection(() => {
+  initializeUserHandler(getMVC());
+
   const endTime = Date.now();
   logger.info("Initialization Complete in " + (endTime - startTime) / 1000 + " seconds");
 

@@ -11,6 +11,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {LogInComponent} from './components/user/log-in/log-in.component';
 import {SignUpComponent} from './components/user/sign-up/sign-up.component';
 import {VerifyComponent} from './components/user/verify/verify.component';
+import {SignUpSuccessComponent} from './components/user/sign-up-success/sign-up-success.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import {VerifyComponent} from './components/user/verify/verify.component';
     HomeWindowComponent,
     LogInComponent,
     SignUpComponent,
-    VerifyComponent
+    VerifyComponent,
+    SignUpSuccessComponent
   ],
   imports: [
     BrowserModule,

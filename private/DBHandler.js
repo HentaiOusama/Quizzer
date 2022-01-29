@@ -10,7 +10,6 @@
 
 const logger = global["globalLoggerObject"];
 const {MongoClient, Db, WithId} = require('mongodb');
-const {initializeUserHandler} = require('./UserHandler');
 
 const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
   process.env["DBClusterName"].replace(/[ ]+/g, "").toLowerCase() + ".zm0r5.mongodb.net/" + process.env["DBName"];
@@ -25,6 +24,11 @@ let collectionSet = {};
 let quizSet = {};
 let quizSetVersion = "0.0.0";
 
+let mailVerificationCredentials;
+const getMVC = () => {
+  return mailVerificationCredentials;
+};
+
 const openDBConnection = (callback) => {
   MongoClient.connect(mongoUrl, async (err, client) => {
     if (err) {
@@ -33,13 +37,15 @@ const openDBConnection = (callback) => {
     } else {
       mongoClient = client;
       quizzerDatabase = await client.db(process.env["DBName"]);
-      await quizzerDatabase.listCollections().forEach((collectionInfo) => {
+      let collectionInfoList = await quizzerDatabase.listCollections().toArray();
+
+      for (let collectionInfo of collectionInfoList) {
         let collectionName = collectionInfo.name;
         collectionSet[collectionName] = quizzerDatabase.collection(collectionName);
 
         if (collectionName === "_Root") {
-          let mailVerificationDoc = collectionSet[collectionName].findOne({"identifier": "mailVerification"});
-          let mailVerificationCredentials = {
+          let mailVerificationDoc = await collectionSet[collectionName].findOne({"identifier": "mailVerification"});
+          mailVerificationCredentials = {
             "jwtSecret": mailVerificationDoc["jwtSecret"],
             "gmailAddress": mailVerificationDoc["gmailAddress"],
             "GOOGLE_CLIENT_ID": mailVerificationDoc["GOOGLE_CLIENT_ID"],
@@ -48,16 +54,15 @@ const openDBConnection = (callback) => {
             "GOOGLE_REFRESH_TOKEN": mailVerificationDoc["GOOGLE_REFRESH_TOKEN"]
           };
           Object.freeze(mailVerificationCredentials);
-          initializeUserHandler(mailVerificationCredentials);
 
           // TODO : Do more work as necessary...
         } else if (collectionName !== "UserBase") {
           quizSet[collectionName] = {};
-          collectionSet[collectionName].find().forEach((document) => {
+          await collectionSet[collectionName].find().forEach((document) => {
             quizSet[collectionName][document["word"]] = document["meaning"];
           });
         }
-      });
+      }
 
       if (callback != null) {
         callback();
@@ -131,11 +136,12 @@ const closeDBConnection = () => {
 };
 
 module.exports = {
-  closeDBConnection,
+  getMVC,
+  openDBConnection,
   getQuizSetVersion,
   getQuizSet,
   insertNewWord,
   saveUserData,
   getUserData,
-  openDBConnection
+  closeDBConnection
 };

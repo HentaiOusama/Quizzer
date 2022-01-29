@@ -1,0 +1,72 @@
+<div class="CenterRowFlex SU-Root-Container">
+  <div class="SU-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <form class="CenterColumnFlex" autocomplete="on" style="justify-content: space-around;"
+          [formGroup]="signUpForm" (ngSubmit)="sendSignUpInfoToServer();">
+      <div class="CenterRowFlex SU-Form-Element" *ngIf="signUpDisplayMessage !== ''">
+        <div class="CenterRowFlex SU-UserMessageHolder">
+          {{signUpDisplayMessage}}
+        </div>
+      </div>
+
+      <div class="CenterRowFlex SU-Form-Element">
+        <div class="CenterRowFlex SU-Form-Column" style="justify-content: flex-end;">
+          <label for="uE">Email&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex SU-Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input id="uE" type="email" autocomplete="on" placeholder="Email" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="emailControl">
+        </div>
+      </div>
+
+      <div class="CenterRowFlex SU-Form-Element">
+        <div class="CenterRowFlex SU-Form-Column" style="justify-content: flex-end;">
+          <label for="uP">Password&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex SU-Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input id="uP" type="password" autocomplete="on" placeholder="Password" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="passwordControl">
+        </div>
+      </div>
+
+      <div class="CenterRowFlex SU-Form-Element">
+        <div class="CenterRowFlex SU-Form-Column" style="justify-content: flex-end;">
+          <label for="uCP">Confirm Password&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex SU-Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input id="uCP" type="password" autocomplete="on" placeholder="Password" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="confirmPasswordControl">
+        </div>
+      </div>
+
+      <div class="CenterColumnFlex" style="height: fit-content; width: fit-content;">
+        <button id="SU-Submit-Button" type="submit" [disabled]="signUpForm.status !== 'VALID'" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary,
+        'opacity': signUpForm.status === 'VALID' ? '1' : '0.33'
+        }">Sign Up
+        </button>
+        <div style="height: 5px;"></div>
+        <div>
+          Already have an account?&nbsp;
+          <a style="color: aqua" routerLink="/user/login" routerLinkActive="active-link">Log in</a>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

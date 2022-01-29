@@ -50,6 +50,7 @@ class TwoWayMap {
   }
 }
 
+let jwtSecretKey;
 /**
  * Returns SHA256 hash of input data as hex string
  * @param data {any}
@@ -63,16 +64,13 @@ const generateJWTToken = (userMail) => {
     userMail,
     jwtSecretKey
   }, jwtSecretKey, {
-    expiresIn: 10 * 60,
-    algorithm: 'RS256'
+    expiresIn: 10 * 60
   });
 };
 const verifyJWTToken = (jwtToken) => {
   let success = false, userMail = null, reason = null;
   try {
-    let data = jwt.verify(jwtToken, jwtSecretKey, {
-      algorithm: 'RS256'
-    });
+    let data = jwt.verify(jwtToken, jwtSecretKey);
 
     if (data["jwtSecret"] === jwtSecretKey) {
       success = true;
@@ -94,7 +92,6 @@ const verifyJWTToken = (jwtToken) => {
 const websiteURL = process.env["websiteURL"];
 let mailVerificationCredentials;
 let oAuth2Client;
-let jwtSecretKey;
 const initializeUserHandler = (mVC) => {
   mailVerificationCredentials = mVC;
   jwtSecretKey = mVC["jwtSecret"];
@@ -117,13 +114,22 @@ const sendVerificationEmail = async (userMail, jwtToken) => {
       accessToken: await oAuth2Client.getAccessToken()
     }
   });
+  const verifyURL = websiteURL + "user/verify/" + jwtToken;
 
   const mailData = {
     from: "Quizzer Contact " + mailVerificationCredentials["gmailAddress"],
     to: userMail,
     subject: "Quizzer Account Verification",
     text: "Please click on the link below to verify your account. This link is only valid for 8 minutes.\n\n" +
-      websiteURL + "user/verify/" + jwtToken
+      verifyURL,
+    html: "<p>Please click on the button below to verify your account. This button is only valid for 8 minutes.</p><br><br>" +
+      "<div style='width: 175px; height: 75px;'>" +
+      "<a style='text-decoration: none;' href='" + verifyURL + "' target='_blank'>" +
+      "<div style='border-radius: 15px; background: aqua; text-align: center; padding: 15px; width: fit-content; height: fit-content;'>" +
+      "Verify Mail" +
+      "</div>" +
+      "</a>" +
+      "</div>"
   };
 
   await transport.sendMail(mailData, () => {
@@ -212,7 +218,7 @@ const signUpNewUser = async (userMail, password) => {
   } else {
     signingUpUsers[userMail] = true;
     let userData = await getUserData(userMail);
-    if (userData == null) {
+    if (userData == null || !userData["isMailVerified"]) {
       await saveUserData(userMail, {
         "passwordHash": sha256(password),
         "isMailVerified": false
