@@ -37,7 +37,8 @@ const {
   hasAdminPrivileges,
   logInUserFromSessionId,
   logInUserFromPassword,
-  logOutUser, signUpNewUser
+  logOutUser, signUpNewUser,
+  verifyNewUser
 } = require('./private/UserHandler');
 const express = require('express');
 const http = require('http');
@@ -145,8 +146,15 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('userVerification', () => {
-    // TODO : Complete this...
+  socket.on('userVerification', async (data) => {
+    if (data["jwtToken"]) {
+      let result = await verifyNewUser(data["jwtToken"]);
+      if (result["success"]) {
+        socket.emit('verificationSuccess');
+      } else {
+        socket.emit('verificationUnsuccessful', result["reason"]);
+      }
+    }
   });
 
   socket.on('addNewWord', (data) => {

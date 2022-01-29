@@ -72,7 +72,7 @@ const verifyJWTToken = (jwtToken) => {
   try {
     let data = jwt.verify(jwtToken, jwtSecretKey);
 
-    if (data["jwtSecret"] === jwtSecretKey) {
+    if (data["jwtSecretKey"] === jwtSecretKey) {
       success = true;
       userMail = data["userMail"];
     } else {

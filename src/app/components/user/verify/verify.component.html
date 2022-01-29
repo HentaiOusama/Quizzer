@@ -1,0 +1,15 @@
+<div class="CenterRowFlex Root-Container">
+  <div class="V-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <div class="CenterColumnFlex V-Data-Wrapper" style="justify-content: space-around;">
+      <div class="CenterColumnFlex V-Holder-Element" style="text-align: center;">
+        {{displayMessage}}
+      </div>
+    </div>
+
+  </div>
+</div>
