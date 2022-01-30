@@ -11,22 +11,6 @@
   padding: 15px;
 }
 
-form {
-  width: 100%;
-  height: 100%;
-}
-
-#uP, #uE {
-  height: 33%;
-  aspect-ratio: 6 / 1;
-
-  border: 0;
-  outline: 0;
-  text-align: left;
-
-  border-radius: 5px;
-}
-
 .LI-ErrorHolder {
   height: 50%;
   width: 66%;
@@ -37,33 +21,4 @@ form {
   font-size: 0.75em;
   font-weight: bold;
   color: #d00000;
-}
-
-.LI-Form-Element {
-  height: 20%;
-  width: 100%;
-  font-size: 2em;
-}
-
-.LI-Form-Column {
-  height: 100%;
-  flex: 1 0 0;
-}
-
-#LI-Submit-Button {
-  height: fit-content;
-  width: fit-content;
-  font-size: 2em;
-  font-family: inherit;
-
-  border: 3px solid;
-  border-radius: 10px;
-  box-sizing: border-box;
-  padding: 2px 15px;
-
-  cursor: pointer;
-}
-
-#LI-Submit-Button:disabled {
-  cursor: not-allowed;
 }

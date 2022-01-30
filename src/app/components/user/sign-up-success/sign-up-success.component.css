@@ -15,23 +15,3 @@
   width: 100%;
   height: 100%;
 }
-
-.SUS-Form-Element {
-  height: 20%;
-  width: 100%;
-  font-size: 2em;
-}
-
-#SUS-Submit-Button {
-  height: fit-content;
-  width: fit-content;
-  font-size: 2em;
-  font-family: inherit;
-
-  border: 3px solid;
-  border-radius: 10px;
-  box-sizing: border-box;
-  padding: 2px 15px;
-
-  cursor: pointer;
-}

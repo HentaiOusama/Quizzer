@@ -6,7 +6,7 @@
   }">
 
     <div class="CenterColumnFlex SUS-Data-Wrapper" style="justify-content: space-around;">
-      <div class="CenterColumnFlex SUS-Form-Element" style="text-align: center;">
+      <div class="CenterColumnFlex Form-Element" style="text-align: center;">
         Sign Up Successful.
         <br><br>
         Please verify your email using the verification mail sent to the registered email.
@@ -15,7 +15,7 @@
       </div>
 
       <div class="CenterColumnFlex" style="height: fit-content; width: fit-content;">
-        <button id="SUS-Submit-Button" (click)="goToLogInPage()" [ngStyle]="{
+        <button class="Form-Submit-Button" (click)="goToLogInPage()" [ngStyle]="{
         'background-color': appComponent.currentTheme.primary,
         'border-color': appComponent.currentTheme.pstBorder,
         'color': appComponent.currentTheme.onPrimary

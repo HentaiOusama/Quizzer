@@ -7,12 +7,12 @@
 
     <form class="CenterColumnFlex" autocomplete="off" style="justify-content: space-around;"
           [formGroup]="userPreferenceForm" (ngSubmit)="startQuiz();">
-      <div class="CenterRowFlex HW-Form-Element">
-        <div class="CenterRowFlex HW-Form-Column">
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column">
           <label for="qC">Number of Questions</label>
         </div>
-        <div class="CenterRowFlex HW-Form-Column">
-          <select id="qC" [ngStyle]="{
+        <div class="CenterRowFlex Form-Column">
+          <select class="Form-Input" style="text-align: center;" id="qC" [ngStyle]="{
           'background-color': appComponent.currentTheme.tertiary,
           'color': appComponent.currentTheme.onTertiary
           }" formControlName="questionCountControl">
@@ -21,12 +21,12 @@
         </div>
       </div>
 
-      <div class="CenterRowFlex HW-Form-Element">
-        <div class="CenterRowFlex HW-Form-Column">
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column">
           <label for="qD">Duration for each Question</label>
         </div>
-        <div class="CenterRowFlex HW-Form-Column">
-          <select id="qD" [ngStyle]="{
+        <div class="CenterRowFlex Form-Column">
+          <select class="Form-Input" style="text-align: center;" id="qD" [ngStyle]="{
           'background-color': appComponent.currentTheme.tertiary,
           'color': appComponent.currentTheme.onTertiary
           }" formControlName="questionDurationControl">
@@ -36,11 +36,11 @@
         </div>
       </div>
 
-      <div class="CenterRowFlex HW-Form-Element">
-        <div class="CenterRowFlex HW-Form-Column">
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column">
           <label for="qT">Question Types</label>
         </div>
-        <div class="CenterRowFlex HW-Form-Column">
+        <div class="CenterRowFlex Form-Column">
           <div class="HW-CheckBox-Holder" id="qT" formGroupName="questionTypeControl">
             <div *ngFor="let type of questionTypesList;">
               <input id="qT-{{type.value}}" type="checkbox" value="{{type.value}}"
@@ -55,12 +55,12 @@
         </div>
       </div>
 
-      <div class="CenterRowFlex HW-Form-Element">
-        <div class="CenterRowFlex HW-Form-Column">
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column">
           <label for="sA">Show Answers</label>
         </div>
-        <div class="CenterRowFlex HW-Form-Column">
-          <select id="sA" [ngStyle]="{
+        <div class="CenterRowFlex Form-Column">
+          <select class="Form-Input" style="text-align: center;" id="sA" [ngStyle]="{
           'background-color': appComponent.currentTheme.tertiary,
           'color': appComponent.currentTheme.onTertiary
           }" formControlName="showAnswerControl">
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <button id="HW-Submit-Button" type="submit" [disabled]="userPreferenceForm.status !== 'VALID'" [ngStyle]="{
+      <button class="Form-Submit-Button" type="submit" [disabled]="userPreferenceForm.status !== 'VALID'" [ngStyle]="{
         'background-color': appComponent.currentTheme.primary,
         'border-color': appComponent.currentTheme.pstBorder,
         'color': appComponent.currentTheme.onPrimary,

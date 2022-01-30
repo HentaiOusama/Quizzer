@@ -7,39 +7,39 @@
 
     <form class="CenterColumnFlex" autocomplete="on" style="justify-content: space-around;"
           [formGroup]="logInForm" (ngSubmit)="sendLogInInfoToServer();">
-      <div class="CenterRowFlex LI-Form-Element" *ngIf="logInErrorReason !== ''">
+      <div class="CenterRowFlex Form-Element" *ngIf="logInErrorReason !== ''">
         <div class="CenterRowFlex LI-ErrorHolder">
           {{logInErrorReason}}
         </div>
       </div>
 
-      <div class="CenterRowFlex LI-Form-Element">
-        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-end;">
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-end;">
           <label for="uE">Email&nbsp;&nbsp;</label>
         </div>
-        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-start;">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-start;">
           &nbsp;&nbsp;
-          <input id="uE" type="email" autocomplete="on" placeholder="Email" [ngStyle]="{
+          <input class="Form-Input" id="uE" type="email" autocomplete="on" placeholder="Email" [ngStyle]="{
           'background-color': appComponent.currentTheme.tertiary,
           'color': appComponent.currentTheme.onTertiary
           }" formControlName="emailControl">
         </div>
       </div>
 
-      <div class="CenterRowFlex LI-Form-Element">
-        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-end;">
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-end;">
           <label for="uP">Password&nbsp;&nbsp;</label>
         </div>
-        <div class="CenterRowFlex LI-Form-Column" style="justify-content: flex-start;">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-start;">
           &nbsp;&nbsp;
-          <input id="uP" type="password" autocomplete="on" placeholder="Password" [ngStyle]="{
+          <input class="Form-Input" id="uP" type="password" autocomplete="on" placeholder="Password" [ngStyle]="{
           'background-color': appComponent.currentTheme.tertiary,
           'color': appComponent.currentTheme.onTertiary
           }" formControlName="passwordControl">
         </div>
       </div>
 
-      <div class="CenterRowFlex LI-Form-Element">
+      <div class="CenterRowFlex Form-Element">
         <input id="rM" type="checkbox" formControlName="rememberControl" [ngStyle]="{
         'background-color': appComponent.currentTheme.tertiary
         }" style="width: 1.25em; height: 1.25em;">&nbsp;
@@ -49,7 +49,7 @@
       </div>
 
       <div class="CenterColumnFlex" style="height: fit-content; width: fit-content;">
-        <button id="LI-Submit-Button" type="submit" [disabled]="logInForm.status !== 'VALID'" [ngStyle]="{
+        <button class="Form-Submit-Button" type="submit" [disabled]="logInForm.status !== 'VALID'" [ngStyle]="{
         'background-color': appComponent.currentTheme.primary,
         'border-color': appComponent.currentTheme.pstBorder,
         'color': appComponent.currentTheme.onPrimary,
