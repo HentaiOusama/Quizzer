@@ -96,7 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.changeDetectorRef.detectChanges();
       }
 
-      if (this.router.url !== "/") {
+      if (this.router.url === "/user/login") {
         this.router.navigate(["/home"]).then().catch((err) => {
           console.log("Error when redirecting to home after login success");
           console.log(err);
@@ -154,9 +154,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   };
 
-  goToHome = () => {
+  goToHomePage = () => {
     this.router.navigate(['/home']).then().catch((err) => {
       console.log("Error while routing to home");
+      console.log(err);
+    });
+  };
+
+  goToAdminPage = () => {
+    this.router.navigate(['/admin']).then().catch((err) => {
+      console.log("Error while routing to admin");
       console.log(err);
     });
   };

@@ -9,7 +9,6 @@ import {Router} from "@angular/router";
   styleUrls: ['./sign-up-success.component.css']
 })
 export class SignUpSuccessComponent implements OnInit {
-
   appComponent: AppComponent = GlobalProviderService.appComponent;
 
   constructor(private router: Router) {

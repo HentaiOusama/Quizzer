@@ -25,7 +25,7 @@
 
       <div class="NavMini" *ngIf="navType === 'mini';">
         <div style="display: flex; height: 100%; width: 100%; position: relative; z-index: 3;">
-          <div style="height: 100%; aspect-ratio: 1 / 1; cursor: pointer;" (click)="goToHome()">
+          <div style="height: 100%; aspect-ratio: 1 / 1; cursor: pointer;" (click)="goToHomePage()">
             <img style="height: 100%; width: 100%; object-fit: contain;" width="295" height="295"
                  src="assets/icons/Logo.svg" alt="Logo">
           </div>
@@ -36,7 +36,7 @@
           </div>
           <div style="height: 100%; width: 100%;">
             <div class="CenterRowFlex" style="justify-content: flex-end; width: 100%; height: 100%;">
-              <div style="cursor: pointer;" *ngIf="isUserAdmin">
+              <div (click)="goToAdminPage()" style="cursor: pointer;" *ngIf="isUserAdmin">
                 Admin
               </div>
               <div style="height: 10px; width: 25px;"></div>
