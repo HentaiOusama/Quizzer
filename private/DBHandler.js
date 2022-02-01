@@ -90,7 +90,7 @@ const insertNewWord = async (collectionName, word, meaning) => {
   }
 
   let existingMeaning = quizSet[collectionName][word];
-  if (!existingMeaning && existingMeaning.toLowerCase() !== meaning.toLowerCase()) {
+  if (existingMeaning && existingMeaning.toLowerCase() !== meaning.toLowerCase()) {
     meaning = existingMeaning + " / " + meaning;
   }
 

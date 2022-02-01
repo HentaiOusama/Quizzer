@@ -1,6 +1,8 @@
 .AW-Wrapper {
   width: 50%;
+  min-width: 800px;
   height: 75%;
+  min-height: 700px;
 
   border: 1px solid;
   border-radius: 15px;
