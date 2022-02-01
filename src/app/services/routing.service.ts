@@ -6,11 +6,13 @@ import {LogInComponent} from "../components/user/log-in/log-in.component";
 import {SignUpComponent} from "../components/user/sign-up/sign-up.component";
 import {VerifyComponent} from "../components/user/verify/verify.component";
 import {SignUpSuccessComponent} from "../components/user/sign-up-success/sign-up-success.component";
+import {AdminComponent} from "../components/admin/admin.component";
 
 const routes: Routes = [
   {path: '', component: HomeWindowComponent},
   {path: 'home', component: HomeWindowComponent},
   {path: 'quiz', component: QuizWindowComponent},
+  {path: 'admin', component: AdminComponent},
   {path: 'user/login', component: LogInComponent},
   {path: 'user/signup', component: SignUpComponent},
   {path: 'user/signup-success', component: SignUpSuccessComponent},

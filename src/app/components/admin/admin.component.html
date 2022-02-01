@@ -1,0 +1,88 @@
+<div class="CenterRowFlex Root-Container">
+  <div class="AW-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <form class="CenterColumnFlex" autocomplete="off" style="justify-content: space-around;"
+          [formGroup]="addWordForm" (ngSubmit)="sendAddWordPacketToServer();">
+      <div class="CenterRowFlex Form-Element" *ngIf="shouldShowUserMessage">
+        <div class="CenterRowFlex AW-UserMessageHolder" [ngStyle]="{
+        'border-color': userMessageColor,
+        'color':userMessageColor
+        }">
+          {{userMessage}}
+        </div>
+      </div>
+
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-end;">
+          <label for="qT">Question Type&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <select class="Form-Input" style="text-align: center;" id="qT" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="questionTypeControl">
+            <option *ngFor="let wordGroup of wordGroupList" value="{{wordGroup}}">{{wordGroup}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-end;">
+          <label for="cQT">Custom Question Type&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input class="Form-Input" id="cQT" type="text" autocomplete="off" placeholder="Custom Question Type"
+                 style="text-align: center;" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary,
+          'opacity': addWordForm.value['questionTypeControl'] === 'Custom' ? '1' : '0.33'
+          }" [attr.disabled]="addWordForm.value['questionTypeControl'] === 'Custom' ? null : true"
+                 formControlName="customQuestionTypeControl">
+        </div>
+      </div>
+
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-end;">
+          <label for="nW">Word&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <input class="Form-Input" style="text-align: center;" id="nW" type="text" autocomplete="off"
+                 placeholder="Word" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" formControlName="wordControl">
+        </div>
+      </div>
+
+      <div class="CenterRowFlex Form-Element">
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-end;">
+          <label for="nWM">Meaning&nbsp;&nbsp;</label>
+        </div>
+        <div class="CenterRowFlex Form-Column" style="justify-content: flex-start;">
+          &nbsp;&nbsp;
+          <textarea class="Form-Input" id="nWM" type="text" autocomplete="off" placeholder="Meaning" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" style="text-align: center; resize: none; font-family: inherit;"
+                    formControlName="meaningControl"></textarea>
+        </div>
+      </div>
+
+      <button class="Form-Submit-Button" type="submit" [disabled]="isButtonDisabled()" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary,
+        'opacity': (isButtonDisabled()) ? '0.33' : '1'
+        }">Add Word
+      </button>
+    </form>
+
+  </div>
+</div>

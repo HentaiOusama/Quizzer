@@ -1,6 +1,8 @@
 .HW-Wrapper {
-  width: 50%;
-  height: 75%;
+  width: 60%;
+  min-width: 1000px;
+  height: 80%;
+  min-height: 700px;
 
   border: 1px solid;
   border-radius: 15px;

@@ -1,4 +1,4 @@
-<div class="RootContainer" [ngStyle]="{
+<div class="App-RootContainer" [ngStyle]="{
 'color': currentTheme.onBackground
 }">
 
@@ -62,7 +62,6 @@
       </div>
     </div>
 
-
     <div class="GreetWindow" *ngIf="navType === 'main'; else holderWindow" [ngStyle]="{
     'opacity': mainNavOpacity
     }">
@@ -74,7 +73,9 @@
       </button>
     </div>
     <ng-template #holderWindow>
-      <router-outlet></router-outlet>
+      <div class="RouterOutletHolder">
+        <router-outlet></router-outlet>
+      </div>
     </ng-template>
   </ng-template>
 

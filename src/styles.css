@@ -77,6 +77,10 @@ form {
   border-radius: 5px;
 }
 
+.Form-Input:disabled {
+  cursor: not-allowed;
+}
+
 .Form-Submit-Button {
   height: fit-content;
   width: fit-content;

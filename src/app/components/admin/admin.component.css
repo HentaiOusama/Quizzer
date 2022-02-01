@@ -1,0 +1,21 @@
+.AW-Wrapper {
+  width: 50%;
+  height: 75%;
+
+  border: 1px solid;
+  border-radius: 15px;
+
+  box-sizing: border-box;
+  padding: 15px;
+}
+
+.AW-UserMessageHolder {
+  height: 50%;
+  width: 66%;
+
+  border: 1px solid;
+  border-radius: 10px;
+
+  font-size: 0.75em;
+  font-weight: bold;
+}

@@ -1,4 +1,4 @@
-.RootContainer {
+.App-RootContainer {
   width: 100%;
   height: 100%;
 
@@ -93,7 +93,7 @@
   cursor: pointer;
 }
 
-app-home-window {
+.RouterOutletHolder {
   height: 95vh;
   max-height: 95vh;
   width: 100%;
@@ -103,44 +103,7 @@ app-home-window {
   padding: 0;
   margin: 0;
 
-  position: relative;
-}
-
-app-log-in {
-  height: 95vh;
-  max-height: 95vh;
-  width: 100%;
-  max-width: 100%;
-
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-
-  position: relative;
-}
-
-app-sign-up {
-  height: 95vh;
-  max-height: 95vh;
-  width: 100%;
-  max-width: 100%;
-
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-
-  position: relative;
-}
-
-app-quiz-window {
-  height: 95vh;
-  max-height: 95vh;
-  width: 100%;
-  max-width: 100%;
-
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-
-  position: relative;
+  position: absolute;
+  top: 5vh;
+  z-index: 1;
 }

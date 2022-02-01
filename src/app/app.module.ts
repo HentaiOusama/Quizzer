@@ -12,6 +12,7 @@ import {LogInComponent} from './components/user/log-in/log-in.component';
 import {SignUpComponent} from './components/user/sign-up/sign-up.component';
 import {VerifyComponent} from './components/user/verify/verify.component';
 import {SignUpSuccessComponent} from './components/user/sign-up-success/sign-up-success.component';
+import {AdminComponent} from './components/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {SignUpSuccessComponent} from './components/user/sign-up-success/sign-up-
     LogInComponent,
     SignUpComponent,
     VerifyComponent,
-    SignUpSuccessComponent
+    SignUpSuccessComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -37,4 +39,5 @@ import {SignUpSuccessComponent} from './components/user/sign-up-success/sign-up-
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -160,10 +160,10 @@ io.on('connection', (socket) => {
   socket.on('addNewWord', (data) => {
     if (hasAdminPrivileges(socket.id)) {
       if (typeof data["collectionName"] === "string" && typeof data["word"] === "string" && typeof data["meaning"] === "string") {
-        insertNewWord(data["collectionName"], data["word"], data["meaning"]).then(() => {
+        insertNewWord(data["collectionName"], data["word"], data["meaning"]).then((data) => {
           socket.emit('addWordSuccess', data);
         }).catch(() => {
-          socket.emit('addWordFailure', data);
+          socket.emit('addWordUnsuccessful', data);
         });
       }
     }

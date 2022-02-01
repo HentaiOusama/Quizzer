@@ -44,18 +44,17 @@ const openDBConnection = (callback) => {
         collectionSet[collectionName] = quizzerDatabase.collection(collectionName);
 
         if (collectionName === "_Root") {
-          let mailVerificationDoc = await collectionSet[collectionName].findOne({"identifier": "mailVerification"});
+          let initializerDoc = await collectionSet[collectionName].findOne({"identifier": "initializer"});
           mailVerificationCredentials = {
-            "jwtSecret": mailVerificationDoc["jwtSecret"],
-            "gmailAddress": mailVerificationDoc["gmailAddress"],
-            "GOOGLE_CLIENT_ID": mailVerificationDoc["GOOGLE_CLIENT_ID"],
-            "GOOGLE_CLIENT_SECRET": mailVerificationDoc["GOOGLE_CLIENT_SECRET"],
-            "GOOGLE_REDIRECT_URI": mailVerificationDoc["GOOGLE_REDIRECT_URI"],
-            "GOOGLE_REFRESH_TOKEN": mailVerificationDoc["GOOGLE_REFRESH_TOKEN"]
+            "jwtSecret": initializerDoc["jwtSecret"],
+            "gmailAddress": initializerDoc["gmailAddress"],
+            "GOOGLE_CLIENT_ID": initializerDoc["GOOGLE_CLIENT_ID"],
+            "GOOGLE_CLIENT_SECRET": initializerDoc["GOOGLE_CLIENT_SECRET"],
+            "GOOGLE_REDIRECT_URI": initializerDoc["GOOGLE_REDIRECT_URI"],
+            "GOOGLE_REFRESH_TOKEN": initializerDoc["GOOGLE_REFRESH_TOKEN"]
           };
+          quizSetVersion = initializerDoc["quizSetVersion"];
           Object.freeze(mailVerificationCredentials);
-
-          // TODO : Do more work as necessary...
         } else if (collectionName !== "UserBase") {
           quizSet[collectionName] = {};
           await collectionSet[collectionName].find().forEach((document) => {
@@ -91,10 +90,7 @@ const insertNewWord = async (collectionName, word, meaning) => {
   }
 
   let existingMeaning = quizSet[collectionName][word];
-  if (!existingMeaning) {
-    existingMeaning = "";
-  }
-  if (existingMeaning.toLowerCase() !== meaning.toLowerCase()) {
+  if (!existingMeaning && existingMeaning.toLowerCase() !== meaning.toLowerCase()) {
     meaning = existingMeaning + " / " + meaning;
   }
 
@@ -102,6 +98,11 @@ const insertNewWord = async (collectionName, word, meaning) => {
     "upsert": true
   });
   quizSet[collectionName][word] = meaning;
+  return {
+    collectionName,
+    word,
+    meaning
+  };
 };
 
 /**
