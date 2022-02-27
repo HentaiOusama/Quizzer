@@ -3,6 +3,34 @@
   height: 100%;
 }
 
+.Timer-Bar-Holder {
+  width: 100%;
+  height: 35px;
+  box-sizing: border-box;
+  padding: 2px 5px;
+
+  border: 1px solid coral;
+  border-radius: 4px;
+}
+
+.Timer-Bar {
+  height: 100%;
+  background-color: coral;
+
+  border-radius: 4px;
+}
+
+.Timer-Bar-Text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #2d5f62;
+  font-size: 1em;
+  font-weight: bold;
+}
+
 .QW-QWord-Holder {
   width: 100%;
   height: 10%;
@@ -14,7 +42,7 @@
 }
 
 .QW-OptionHolder {
-  height: 80%;
+  height: 70%;
   width: 100%;
 
   display: flex;
@@ -30,13 +58,15 @@
 
 .QW-OptionElement {
   width: 100%;
-  height: 35px;
+  height: 45px;
 
   box-sizing: border-box;
   padding: 5px;
 
-  border: 1px solid rgba(68, 68, 68, 0.5);
+  border: 1px solid;
   border-radius: 4px;
+
+  cursor: pointer;
 }
 
 .QW-OptionSubElement {
@@ -44,4 +74,12 @@
 
   font-size: 1.5em;
   border: 2px solid;
+}
+
+.QW-Nav-Button {
+  height: 100%;
+  width: 100%;
+
+  font-size: 1.25em;
+  border-radius: 10px;
 }

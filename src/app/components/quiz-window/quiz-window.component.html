@@ -1,8 +1,22 @@
 <div class="CenterRowFlex Root-Container" style="box-sizing: border-box; padding: 15px;">
   <div class="QW-Wrapper">
+    <div class="CenterRowFlex Timer-Bar-Holder" style="position: relative">
+      <div class="CenterRowFlex Timer-Bar" style="text-align: center;" [ngStyle]="{
+      'width': ((showTimer) ? ((timeLeft * 100) / questionDuration) : '100') + '%'
+      }">
+      </div>
+      <div class="CenterRowFlex Timer-Bar-Text" *ngIf="showTimer">
+        Time Left: {{timeLeft}}s of {{questionDuration}}s
+      </div>
+    </div>
+
+    <div style="height: 5px;">
+
+    </div>
+
     <div
       style="font-size: 1em; min-height: 25px; height: 4%; display: flex; align-items: center; color: rgba(128,255,255);">
-      Question {{questionNumber}} of {{maxQuestionCount}}:
+      Question {{questionNumber + 1}} of {{maxQuestionCount}}:
     </div>
 
     <div style="font-size: 1.5em; min-height: 45px; height: 6%; display: flex; align-items: center;" [ngStyle]="{
@@ -20,17 +34,39 @@
 
     <div class="QW-OptionHolder">
       <div class="CenterRowFlex QW-OptionElement" (click)="selectOption(i)" id="qw-option-{{i}}"
-           *ngFor="let option of options; let i = index;">
-        <div style="width: 10%;" [ngStyle]="{
+           *ngFor="let option of options; let i = index;" [ngStyle]="{
+           'border-color': getOptionBorderColor(i)
+           }">
+        <div class="CenterRowFlex" style="width: 3%;" [ngStyle]="{
         'border-color': appComponent.currentTheme.bsBorder
         }">
           {{i + 1}}.
         </div>
-        <div style="width: 90%;" [ngStyle]="{
+        <div style="width: 1%;"></div>
+        <div class="CenterRowFlex" style="width: 98%; justify-content: left; text-align: left;" [ngStyle]="{
         'border-color': appComponent.currentTheme.bsBorder
         }">
           {{option}}
         </div>
+      </div>
+    </div>
+
+    <div class="CenterRowFlex" style="justify-content: space-between; height: 4%; width: 100%;">
+      <div style="width: 100px; height: 100%;">
+        <button class="QW-Nav-Button" type="submit" *ngIf="!isSelectionMode && questionNumber !== 0" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary
+        }">Previous
+        </button>
+      </div>
+      <div style="width: 100px; height: 100%;">
+        <button class="QW-Nav-Button" type="submit" (click)="goToNextQuestion()" [ngStyle]="{
+        'background-color': appComponent.currentTheme.primary,
+        'border-color': appComponent.currentTheme.pstBorder,
+        'color': appComponent.currentTheme.onPrimary
+        }">{{(questionNumber < maxQuestionCount) ? "Next" : "End"}}
+        </button>
       </div>
     </div>
   </div>
