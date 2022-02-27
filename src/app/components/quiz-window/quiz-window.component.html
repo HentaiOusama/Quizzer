@@ -1,19 +1,36 @@
-<div class="Root-Container">
-  <div [ngStyle]="{
-  'color': appComponent.currentTheme.onBackground
-  }">
-    Select the correct meaning of the {{questionWordType}} shown below.
-  </div>
-  <div class="CenterRowFlex" [ngStyle]="{
-  'background-color': appComponent.currentTheme.surface,
-  'color': appComponent.currentTheme.onSurface
-  }">
-    {{questionWord}}
-  </div>
-  <div class="QW-OptionHolder">
-    <div class="QW-OptionElement" *ngFor="let option of options; let i = index;">
-      <div>
-        {{option}}
+<div class="CenterRowFlex Root-Container" style="box-sizing: border-box; padding: 15px;">
+  <div class="QW-Wrapper">
+    <div
+      style="font-size: 1em; min-height: 25px; height: 4%; display: flex; align-items: center; color: rgba(128,255,255);">
+      Question {{questionNumber}} of {{maxQuestionCount}}:
+    </div>
+
+    <div style="font-size: 1.5em; min-height: 45px; height: 6%; display: flex; align-items: center;" [ngStyle]="{
+    'color': appComponent.currentTheme.onBackground
+    }">
+      Select the correct meaning of the {{questionWordType}} shown below.
+    </div>
+
+    <div class="CenterRowFlex QW-QWord-Holder" [ngStyle]="{
+    'background-color': appComponent.currentTheme.surface,
+    'color': appComponent.currentTheme.onSurface
+    }">
+      {{questionWord}}
+    </div>
+
+    <div class="QW-OptionHolder">
+      <div class="CenterRowFlex QW-OptionElement" (click)="selectOption(i)" id="qw-option-{{i}}"
+           *ngFor="let option of options; let i = index;">
+        <div style="width: 10%;" [ngStyle]="{
+        'border-color': appComponent.currentTheme.bsBorder
+        }">
+          {{i + 1}}.
+        </div>
+        <div style="width: 90%;" [ngStyle]="{
+        'border-color': appComponent.currentTheme.bsBorder
+        }">
+          {{option}}
+        </div>
       </div>
     </div>
   </div>
