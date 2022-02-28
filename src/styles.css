@@ -75,10 +75,12 @@ form {
   text-align: left;
 
   border-radius: 5px;
+  opacity: 1;
 }
 
 .Form-Input:disabled {
   cursor: not-allowed;
+  opacity: 0.33;
 }
 
 .Form-Submit-Button {

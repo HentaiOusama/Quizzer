@@ -30,7 +30,7 @@ const {
   getQuizSetVersion,
   getQuizSet,
   insertNewWord,
-  closeDBConnection, getMVC
+  closeDBConnection, getMVC, insertWordsFromFile
 } = require('./private/DBHandler');
 const {
   initializeUserHandler,
@@ -166,6 +166,17 @@ io.on('connection', (socket) => {
           socket.emit('addWordUnsuccessful', data);
         });
       }
+    }
+  });
+
+  socket.on('addWordsFromFile', async (data) => {
+    if (hasAdminPrivileges(socket.id) && data["collectionName"]) {
+      insertWordsFromFile(data["collectionName"]).then(() => {
+        socket.emit('addWordsFromFileSuccess');
+      }).catch((err) => {
+        console.log(err);
+        socket.emit('addWordsFromFileUnsuccessful');
+      });
     }
   });
 

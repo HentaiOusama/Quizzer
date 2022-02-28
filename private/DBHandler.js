@@ -10,6 +10,7 @@
 
 const logger = global["globalLoggerObject"];
 const {MongoClient, Db, WithId} = require('mongodb');
+const {getWordMeaningArray} = require('./FileToWordMeaningArray');
 
 const mongoUrl = "mongodb+srv://" + process.env["DBUsername"] + ":" + process.env["DBPassword"] + "@" +
   process.env["DBClusterName"].replace(/[ ]+/g, "").toLowerCase() + ".zm0r5.mongodb.net/" + process.env["DBName"];
@@ -94,6 +95,10 @@ const insertNewWord = async (collectionName, word, meaning) => {
     meaning = existingMeaning + " / " + meaning;
   }
 
+  // Puts space after non-alphanumeric characters if not present.
+  meaning = meaning.replace(/([^A-Za-z0-9\n\r\s](?=[^\s]+))/gi, '$& ').trim();
+  word = word.replace(/([^A-Za-z0-9\n\r\s](?=[^\s]+))/gi, '$& ').trim();
+
   await collectionSet[collectionName].updateOne({word}, {"$set": {word, meaning}}, {
     "upsert": true
   });
@@ -103,6 +108,12 @@ const insertNewWord = async (collectionName, word, meaning) => {
     word,
     meaning
   };
+};
+const insertWordsFromFile = async (collectionName) => {
+  let wordMeaningArray = getWordMeaningArray();
+  for (let pair of wordMeaningArray) {
+    await insertNewWord(collectionName, pair["word"], pair["meaning"]);
+  }
 };
 
 /**
@@ -142,6 +153,7 @@ module.exports = {
   getQuizSetVersion,
   getQuizSet,
   insertNewWord,
+  insertWordsFromFile,
   saveUserData,
   getUserData,
   closeDBConnection

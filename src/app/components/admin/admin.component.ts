@@ -36,54 +36,66 @@ export class AdminComponent implements OnInit, OnDestroy {
         Validators.required
       ),
       "customQuestionTypeControl": new FormControl(
-        "",
-        <ValidatorFn>this.requireUniqueType
+        {disabled: true, value: ""}, {
+          validators: <ValidatorFn>this.requireUniqueType,
+          updateOn: "change"
+        }
       ),
       "wordControl": new FormControl(
-        "",
-        Validators.required
+        {disabled: false, value: ""}, {
+          validators: <ValidatorFn>this.requiredIfNotFileMode,
+          updateOn: "change"
+        }
       ),
       "meaningControl": new FormControl(
-        "",
-        Validators.required
-      )
+        {disabled: false, value: ""}, {
+          validators: <ValidatorFn>this.requiredIfNotFileMode,
+          updateOn: "change"
+        }
+      ),
+      "fileModeControl": new FormControl(false)
     });
 
-    this.addWordForm.valueChanges.subscribe(() => {
-      if (this.addWordForm.value["questionTypeControl"] !== "Custom" && this.addWordForm.value["customQuestionTypeControl"] !== "") {
+    this.addWordForm.controls["questionTypeControl"].valueChanges.subscribe((value) => {
+      if (value === "Custom") {
         this.addWordForm.controls["customQuestionTypeControl"].setValue("");
+        this.addWordForm.controls["customQuestionTypeControl"].enable();
+      } else {
+        this.addWordForm.controls["customQuestionTypeControl"].disable();
       }
+    });
+    this.addWordForm.controls["fileModeControl"].valueChanges.subscribe((value) => {
+      if (value) {
+        this.addWordForm.controls["wordControl"].setValue("");
+        this.addWordForm.controls["meaningControl"].setValue("");
+        this.addWordForm.controls["wordControl"].disable();
+        this.addWordForm.controls["meaningControl"].disable();
+      } else {
+        this.addWordForm.controls["wordControl"].enable();
+        this.addWordForm.controls["meaningControl"].enable();
+      }
+    });
+    this.addWordForm.valueChanges.subscribe(() => {
       this.changeDetectorRef.detectChanges();
     });
 
     SocketIOService.setActionForEvent('addWordSuccess', (data) => {
-      this.canClickOnButton = true;
       if (GlobalProviderService.quizSet[data["collectionName"]] == null) {
         GlobalProviderService.quizSet[data["collectionName"]] = {};
       }
       GlobalProviderService.quizSet[data["collectionName"]][data["word"]] = data["meaning"];
       this.computeWordGroupList();
-      this.userMessage = "Success";
-      this.userMessageColor = "#1cd000";
-      this.shouldShowUserMessage = true;
-      this.resetAddWordForm();
-      this.changeDetectorRef.detectChanges();
-      setTimeout(() => {
-        this.shouldShowUserMessage = false;
-        this.changeDetectorRef.detectChanges();
-      }, 2500);
+      this.postResponseAction("Success", "#1cd000");
+    });
+    SocketIOService.setActionForEvent('addWordsFromFileSuccess', () => {
+      SocketIOService.emitEventToServer("sendQuizSet", null);
+      this.postResponseAction("Success", "#1cd000");
     });
     SocketIOService.setActionForEvent('addWordUnsuccessful', () => {
-      this.canClickOnButton = true;
-      this.userMessage = "Error";
-      this.userMessageColor = "#d00000";
-      this.shouldShowUserMessage = true;
-      this.resetAddWordForm();
-      this.changeDetectorRef.detectChanges();
-      setTimeout(() => {
-        this.shouldShowUserMessage = false;
-        this.changeDetectorRef.detectChanges();
-      }, 2500);
+      this.postResponseAction("Error", "#d00000");
+    });
+    SocketIOService.setActionForEvent('addWordsFromFileUnsuccessful', () => {
+      this.postResponseAction("Error", "#d00000");
     });
   }
 
@@ -94,8 +106,21 @@ export class AdminComponent implements OnInit, OnDestroy {
     }, 2500);
   }
 
+  postResponseAction = (userMessage: string, setColor: string) => {
+    this.canClickOnButton = true;
+    this.userMessage = userMessage;
+    this.userMessageColor = setColor;
+    this.shouldShowUserMessage = true;
+    this.resetAddWordForm();
+    this.changeDetectorRef.detectChanges();
+    setTimeout(() => {
+      this.shouldShowUserMessage = false;
+      this.changeDetectorRef.detectChanges();
+    }, 2500);
+  };
+
   isButtonDisabled = () => {
-    return ((this.addWordForm.status !== "VALID") || (this.shouldShowUserMessage));
+    return ((this.addWordForm.status !== "VALID") || (this.shouldShowUserMessage) || (!this.canClickOnButton));
   };
 
   computeWordGroupList = () => {
@@ -118,9 +143,22 @@ export class AdminComponent implements OnInit, OnDestroy {
     return returnValue;
   };
 
+  requiredIfNotFileMode = (control: AbstractControl): ValidationErrors | null => {
+    let returnValue = null;
+
+    if (this.addWordForm && !this.addWordForm.value["fileModeControl"]) {
+      if (!control.value) {
+        returnValue = {"doesValueExist": {"value": false}};
+      }
+    }
+
+    return returnValue;
+  };
+
   sendAddWordPacketToServer = () => {
     if (this.canClickOnButton && this.addWordForm.status === "VALID") {
       this.canClickOnButton = false;
+      this.changeDetectorRef.detectChanges();
 
       let collectionName = this.addWordForm.value["questionTypeControl"];
       if (collectionName === "Custom") {
@@ -128,11 +166,17 @@ export class AdminComponent implements OnInit, OnDestroy {
       }
       collectionName = collectionName.replace(/^[\n\r\s]+|[\n\r\s]+$/gm, '');
 
-      SocketIOService.emitEventToServer('addNewWord', {
-        collectionName,
-        "word": this.addWordForm.value["wordControl"].replace(/^[\n\r\s]+|[\n\r\s]+$/gm, ''),
-        "meaning": this.addWordForm.value["meaningControl"].replace(/^[\n\r\s]+|[\n\r\s]+$/gm, '')
-      });
+      if (this.addWordForm.value["fileModeControl"]) {
+        SocketIOService.emitEventToServer('addWordsFromFile', {
+          collectionName
+        });
+      } else {
+        SocketIOService.emitEventToServer('addNewWord', {
+          collectionName,
+          "word": this.addWordForm.value["wordControl"].replace(/^[\n\r\s]+|[\n\r\s]+$/gm, ''),
+          "meaning": this.addWordForm.value["meaningControl"].replace(/^[\n\r\s]+|[\n\r\s]+$/gm, '')
+        });
+      }
     }
   };
 

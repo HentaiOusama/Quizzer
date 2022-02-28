@@ -40,8 +40,7 @@
           <input class="Form-Input" id="cQT" type="text" autocomplete="off" placeholder="Custom Question Type"
                  style="text-align: center;" [ngStyle]="{
           'background-color': appComponent.currentTheme.tertiary,
-          'color': appComponent.currentTheme.onTertiary,
-          'opacity': addWordForm.value['questionTypeControl'] === 'Custom' ? '1' : '0.33'
+          'color': appComponent.currentTheme.onTertiary
           }" [attr.disabled]="addWordForm.value['questionTypeControl'] === 'Custom' ? null : true"
                  formControlName="customQuestionTypeControl">
         </div>
@@ -73,6 +72,14 @@
           }" style="text-align: center; resize: none; font-family: inherit;"
                     formControlName="meaningControl"></textarea>
         </div>
+      </div>
+
+      <div class="CenterRowFlex Form-Element">
+        <input class="Form-Input" id="iFF" type="checkbox" [ngStyle]="{
+          'background-color': appComponent.currentTheme.tertiary,
+          'color': appComponent.currentTheme.onTertiary
+          }" style="font-family: inherit; width: 1.25em; height: 1.2em;" formControlName="fileModeControl">
+        <label for="iFF">&nbsp;Insert from File</label>
       </div>
 
       <button class="Form-Submit-Button" type="submit" [disabled]="isButtonDisabled()" [ngStyle]="{
