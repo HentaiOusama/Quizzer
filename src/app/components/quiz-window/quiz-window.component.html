@@ -1,5 +1,6 @@
 <div class="CenterRowFlex Root-Container" style="box-sizing: border-box; padding: 15px;">
-  <div class="QW-Wrapper">
+  <div class="CenterColumnFlex QW-Wrapper">
+
     <div class="CenterRowFlex Timer-Bar-Holder" style="position: relative">
       <div class="CenterRowFlex Timer-Bar" style="text-align: center;" [ngStyle]="{
       'width': ((showTimer) ? ((timeLeft * 100) / questionDuration) : '100') + '%'
@@ -10,12 +11,11 @@
       </div>
     </div>
 
-    <div
-      style="font-size: 1em; min-height: 22px; height: 3.5%; display: flex; align-items: center; color: rgba(128,255,255);">
+    <div class="QW-Num-Holder">
       Question {{questionNumber + 1}} of {{maxQuestionCount}}:
     </div>
 
-    <div style="font-size: 1.5em; min-height: 40px; height: 5.5%; display: flex; align-items: center;" [ngStyle]="{
+    <div class="QW-Question-Holder" [ngStyle]="{
     'color': appComponent.currentTheme.onBackground
     }">
       Select the correct meaning of the {{questionWordType}} shown below.
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div class="CenterRowFlex" style="justify-content: space-between; height: 4%; width: 100%;">
+    <div class="CenterRowFlex" style="justify-content: space-between; flex: 4 0 0; width: 100%;">
       <div style="width: 100px; height: 100%;">
         <button class="QW-Nav-Button" (click)="goToPreviousQuestion()" [ngStyle]="{
         'background-color': appComponent.currentTheme.primary,
@@ -65,5 +65,6 @@
         </button>
       </div>
     </div>
+
   </div>
 </div>
