@@ -10,16 +10,12 @@
       </div>
     </div>
 
-    <div style="height: 5px;">
-
-    </div>
-
     <div
-      style="font-size: 1em; min-height: 25px; height: 4%; display: flex; align-items: center; color: rgba(128,255,255);">
+      style="font-size: 1em; min-height: 22px; height: 3.5%; display: flex; align-items: center; color: rgba(128,255,255);">
       Question {{questionNumber + 1}} of {{maxQuestionCount}}:
     </div>
 
-    <div style="font-size: 1.5em; min-height: 45px; height: 6%; display: flex; align-items: center;" [ngStyle]="{
+    <div style="font-size: 1.5em; min-height: 40px; height: 5.5%; display: flex; align-items: center;" [ngStyle]="{
     'color': appComponent.currentTheme.onBackground
     }">
       Select the correct meaning of the {{questionWordType}} shown below.
@@ -53,19 +49,19 @@
 
     <div class="CenterRowFlex" style="justify-content: space-between; height: 4%; width: 100%;">
       <div style="width: 100px; height: 100%;">
-        <button class="QW-Nav-Button" type="submit" *ngIf="!isSelectionMode && questionNumber !== 0" [ngStyle]="{
+        <button class="QW-Nav-Button" (click)="goToPreviousQuestion()" [ngStyle]="{
         'background-color': appComponent.currentTheme.primary,
         'border-color': appComponent.currentTheme.pstBorder,
         'color': appComponent.currentTheme.onPrimary
-        }">Previous
+        }" *ngIf="!isSelectionMode && questionNumber !== 0">Previous
         </button>
       </div>
       <div style="width: 100px; height: 100%;">
-        <button class="QW-Nav-Button" type="submit" (click)="goToNextQuestion()" [ngStyle]="{
+        <button class="QW-Nav-Button" (click)="goToNextQuestion()" [ngStyle]="{
         'background-color': appComponent.currentTheme.primary,
         'border-color': appComponent.currentTheme.pstBorder,
         'color': appComponent.currentTheme.onPrimary
-        }">{{(questionNumber < maxQuestionCount) ? "Next" : "End"}}
+        }">{{((questionNumber + 1) < maxQuestionCount) ? "Next" : "End"}}
         </button>
       </div>
     </div>

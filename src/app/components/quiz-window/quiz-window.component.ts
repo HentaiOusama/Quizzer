@@ -27,10 +27,11 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   options: string[];
   selectedOption: number = -1;
   correctOption: number = -1;
+  correctAnswer: string = "";
 
   isSelectionMode: boolean = true;
-  showTimer: boolean = this.questionDuration !== 0;
   canSelectOptions: boolean = true;
+  showTimer: boolean = this.questionDuration !== 0;
   questionHistory: QuestionHistory = {};
   questionStartTime: number = 0;
   timeLeft: number = 0;
@@ -45,10 +46,10 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     this.options = Array(this.optionCount).fill("");
-    this.goToNextQuestion();
   }
 
   ngOnInit() {
+    this.goToNextQuestion();
   }
 
   ngAfterViewInit() {
@@ -60,58 +61,97 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  clearTimer = () => {
+    if (this.intervalId !== -1) {
+      clearInterval(this.intervalId);
+      this.intervalId = -1;
+    }
+  };
+
+  goToPreviousQuestion = () => {
+    if (this.questionNumber > 0) {
+      this.questionNumber -= 1;
+      this.updateUIFromHistory();
+    }
+  };
+
   goToNextQuestion = () => {
+    this.clearTimer();
     this.timeLeft = this.questionDuration;
-    this.canSelectOptions = true;
 
-    if ((this.questionNumber + 1) < this.maxQuestionCount) {
-      this.questionNumber += 1;
-      this.selectedOption = -1;
+    if (this.isSelectionMode) {
+      this.canSelectOptions = true;
 
-      this.buildRandomQuestion();
-      this.questionStartTime = Date.now();
-      this.nonChangeCount = 0;
+      if ((this.questionNumber + 1) < this.maxQuestionCount) {
+        this.questionNumber += 1;
+        this.selectedOption = -1;
 
-      if (this.showTimer) {
-        this.intervalId = setInterval(() => {
-          let timeLeft = this.questionDuration - (Math.floor((Date.now() - this.questionStartTime) / 1000));
-          if (timeLeft < 0) {
-            this.timeLeft = 0;
-            this.selectOption(-1);
-            this.changeDetectorRef.detectChanges();
-          } else {
-            this.timeLeft = timeLeft;
-            this.changeDetectorRef.detectChanges();
-          }
-        }, 200);
+        this.buildRandomQuestion();
+        this.questionStartTime = Date.now();
+        this.nonChangeCount = 0;
+
+        if (this.showTimer) {
+          this.intervalId = setInterval(() => {
+            let timeLeft = this.questionDuration - (Math.floor((Date.now() - this.questionStartTime) / 1000));
+            if (timeLeft < 0) {
+              this.timeLeft = 0;
+              this.selectOption(-1);
+            } else {
+              this.timeLeft = timeLeft;
+              this.changeDetectorRef.detectChanges();
+            }
+          }, 200);
+        }
+      } else {
+        this.isSelectionMode = false;
+        this.canSelectOptions = false;
       }
+      
+      this.changeDetectorRef.detectChanges();
     } else {
-      this.isSelectionMode = false;
+      this.canSelectOptions = false;
+
+      if ((this.questionNumber + 1) < this.maxQuestionCount) {
+        this.questionNumber += 1;
+        this.updateUIFromHistory();
+      }
+    }
+  };
+
+  updateUIFromHistory = () => {
+    if ((0 <= this.questionNumber) && (this.questionNumber < this.maxQuestionCount)) {
+      let historyElement = this.questionHistory[this.questionNumber];
+      this.questionWordType = historyElement.questionType;
+      this.questionWord = historyElement.questionWord;
+      this.options = historyElement.options;
+      this.selectedOption = historyElement.selectedOption;
+      this.changeDetectorRef.detectChanges();
     }
   };
 
   selectOption = (optionNumber: number) => {
-    if (this.intervalId !== -1) {
-      console.log("Interval Cleared");
-      clearInterval(this.intervalId);
-      this.intervalId = -1;
-    }
     if (optionNumber === -1) {
       this.goToNextQuestion();
     } else if (this.canSelectOptions) {
       this.canSelectOptions = false;
       this.questionHistory[this.questionNumber].selectedOption = optionNumber;
       this.selectedOption = optionNumber;
+      if (optionNumber !== this.correctOption && this.options[optionNumber] === this.correctAnswer) {
+        this.questionHistory[this.questionNumber].correctOption = optionNumber;
+        this.correctOption = optionNumber;
+      }
 
       if ((this.questionNumber + 1) >= this.maxQuestionCount) {
         this.goToNextQuestion();
+      } else {
+        this.clearTimer();
       }
     }
     this.changeDetectorRef.detectChanges();
   };
 
   getOptionBorderColor = (optionIndex: number) => {
-    if (this.selectedOption === -1) {
+    if (this.isSelectionMode && this.selectedOption === -1) {
       return this.appComponent.currentTheme.bsBorder;
     } else {
       if (optionIndex === this.correctOption) {
@@ -146,7 +186,8 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   };
 
-  getRandomOptionsWithCorrectOption = (objectPool: { [keys: string]: any }, correctOption: string) => {
+  getRandomOptionsWithCorrectOption = (objectPool: { [keys: string]: any }, correctAnswer: string) => {
+    this.correctAnswer = correctAnswer;
     let keySet = Object.keys(objectPool);
     let optionList = [];
     let randomNumbers = this.getUniqueRandomNumbers(0, keySet.length, this.optionCount);
@@ -156,7 +197,7 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     let count = 0;
     for (let num of randomNumbers) {
       let option = objectPool[keySet[num]];
-      if (shouldEditOptions && correctOption === option) {
+      if (shouldEditOptions && correctAnswer === option) {
         editIndex = count;
         shouldEditOptions = false;
       } else {
@@ -166,7 +207,7 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (shouldEditOptions) {
-      optionList[editIndex] = correctOption;
+      optionList[editIndex] = correctAnswer;
     }
 
     return {
