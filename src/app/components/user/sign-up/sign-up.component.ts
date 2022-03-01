@@ -68,6 +68,7 @@ export class SignUpComponent implements OnInit {
         this.canClickOnButton = true;
       }, 5000);
       SocketIOService.emitEventToServer("userSignup", {
+        "websiteURL": window.location.origin,
         "userMail": this.signUpForm.value["emailControl"],
         "password": this.signUpForm.value["passwordControl"]
       });

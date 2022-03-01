@@ -45,10 +45,7 @@ const http = require('http');
 const {Server} = require('socket.io');
 const angularJson = require('./angular.json');
 
-let portNumber = process.env["PORT"];
-if (!portNumber) {
-  portNumber = 6970;
-}
+let portNumber = process.env["PORT"] || 6970;
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -129,9 +126,9 @@ io.on('connection', (socket) => {
   socket.on('userSignup', async (credentials) => {
     try {
       credentials["userMail"] = validateUserMail(credentials["userMail"]);
-      if (typeof credentials["password"] === "string") {
+      if (typeof credentials["password"] === "string" && typeof credentials["websiteURL"] === "string") {
         try {
-          let result = await signUpNewUser(credentials["userMail"], credentials["password"]);
+          let result = await signUpNewUser(credentials["websiteURL"], credentials["userMail"], credentials["password"]);
           if (result["success"]) {
             socket.emit("signupSuccess");
           } else {
@@ -204,6 +201,6 @@ openDBConnection(() => {
   logger.info("Initialization Complete in " + (endTime - startTime) / 1000 + " seconds");
 
   httpServer.listen(portNumber, () => {
-    logger.info('Listening on port ' + process.env.PORT);
+    logger.info('Listening on port ' + portNumber);
   });
 });

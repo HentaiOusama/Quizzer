@@ -65,12 +65,12 @@ const generateJWTToken = (userMail) => {
     jwtSecretKey
   }, jwtSecretKey, {
     expiresIn: 10 * 60
-  });
+  }, undefined);
 };
 const verifyJWTToken = (jwtToken) => {
   let success = false, userMail = null, reason = null;
   try {
-    let data = jwt.verify(jwtToken, jwtSecretKey);
+    let data = jwt.verify(jwtToken, jwtSecretKey, undefined, undefined);
 
     if (data["jwtSecretKey"] === jwtSecretKey) {
       success = true;
@@ -89,7 +89,6 @@ const verifyJWTToken = (jwtToken) => {
   };
 };
 
-const websiteURL = process.env["websiteURL"];
 let mailVerificationCredentials;
 let oAuth2Client;
 const initializeUserHandler = (mVC) => {
@@ -102,7 +101,7 @@ const initializeUserHandler = (mVC) => {
   );
   oAuth2Client.setCredentials({"refresh_token": mVC["GOOGLE_REFRESH_TOKEN"]});
 };
-const sendVerificationEmail = async (userMail, jwtToken) => {
+const sendVerificationEmail = async (websiteURL, userMail, jwtToken) => {
   const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -114,7 +113,7 @@ const sendVerificationEmail = async (userMail, jwtToken) => {
       accessToken: await oAuth2Client.getAccessToken()
     }
   });
-  const verifyURL = websiteURL + "user/verify/" + jwtToken;
+  const verifyURL = websiteURL + "/user/verify/" + jwtToken;
 
   const mailData = {
     from: "Quizzer Contact " + mailVerificationCredentials["gmailAddress"],
@@ -211,7 +210,7 @@ const logOutUser = (socketId) => {
 
 const signingUpUsers = {};
 const socketToUserMailMapping = new TwoWayMap({});
-const signUpNewUser = async (userMail, password) => {
+const signUpNewUser = async (websiteURL, userMail, password) => {
   let success = false, reason = null;
   if (signingUpUsers[userMail]) {
     reason = "Sign up already underway";
@@ -225,7 +224,7 @@ const signUpNewUser = async (userMail, password) => {
       });
 
       let jwtToken = await generateJWTToken(userMail);
-      sendVerificationEmail(userMail, jwtToken).then().catch((err) => {
+      sendVerificationEmail(websiteURL, userMail, jwtToken).then().catch((err) => {
         logger.error("Error when sending verification mail");
         logger.error(err);
       });
