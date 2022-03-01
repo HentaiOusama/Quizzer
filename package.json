@@ -1,6 +1,9 @@
 {
   "name": "quizzer",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "engines": {
+    "node": "17.x"
+  },
   "scripts": {
     "ng": "ng",
     "server": "node server",
