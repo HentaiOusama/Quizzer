@@ -1,4 +1,4 @@
-<div class="CenterRowFlex Root-Container" style="box-sizing: border-box; padding: 15px;">
+<div class="CenterRowFlex Root-Container" style="box-sizing: border-box; padding: 10px 20px 4px;">
   <div class="CenterColumnFlex QW-Wrapper">
 
     <div class="CenterRowFlex Timer-Bar-Holder" style="position: relative">
@@ -30,9 +30,7 @@
 
     <div class="QW-OptionHolder">
       <div class="CenterRowFlex QW-OptionElement" (click)="selectOption(i)" id="qw-option-{{i}}"
-           *ngFor="let option of options; let i = index;" [ngStyle]="{
-           'border-color': getOptionBorderColor(i)
-           }">
+           *ngFor="let option of options; let i = index;" [ngStyle]="getOptionDynamicStyle(i)">
         <div class="CenterRowFlex" style="width: 3%;" [ngStyle]="{
         'border-color': appComponent.currentTheme.bsBorder
         }">

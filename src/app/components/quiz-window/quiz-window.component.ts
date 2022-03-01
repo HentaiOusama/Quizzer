@@ -106,7 +106,7 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isSelectionMode = false;
         this.canSelectOptions = false;
       }
-      
+
       this.changeDetectorRef.detectChanges();
     } else {
       this.canSelectOptions = false;
@@ -150,18 +150,21 @@ export class QuizWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
   };
 
-  getOptionBorderColor = (optionIndex: number) => {
-    if (this.isSelectionMode && this.selectedOption === -1) {
-      return this.appComponent.currentTheme.bsBorder;
-    } else {
+  getOptionDynamicStyle = (optionIndex: number) => {
+    let returnData = {
+      'border-color': this.appComponent.currentTheme.bsBorder,
+      'background-color': "rgba(0, 0, 0, 0)"
+    };
+    if (!this.isSelectionMode || this.selectedOption !== -1) {
       if (optionIndex === this.correctOption) {
-        return "#40a03c";
+        returnData['border-color'] = '#40a03c';
+        returnData['background-color'] = "rgba(64,160,60,0.5)";
       } else if (optionIndex === this.selectedOption) {
-        return "#9b1919";
-      } else {
-        return this.appComponent.currentTheme.bsBorder;
+        returnData['border-color'] = '#9b1919';
+        returnData['background-color'] = "rgba(155,25,25,0.5)";
       }
     }
+    return returnData;
   };
 
   buildRandomQuestion = () => {
