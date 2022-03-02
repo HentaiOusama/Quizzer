@@ -97,7 +97,7 @@ const insertNewWord = async (collectionName, word, meaning) => {
 
   // Puts space after non-alphanumeric characters if not present.
   meaning = meaning.replace(/([^A-Za-z0-9\n\r\s](?=[^\s]+))/gi, '$& ').trim();
-  word = word.replace(/([^A-Za-z0-9\n\r\s](?=[^\s]+))/gi, '$& ').trim();
+  word = word.replace(/([^A-Za-z0-9\n\r\s-](?=[^\s]+))/gi, '$& ').trim();
 
   await collectionSet[collectionName].updateOne({word}, {"$set": {word, meaning}}, {
     "upsert": true
