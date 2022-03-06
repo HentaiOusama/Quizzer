@@ -1,7 +1,10 @@
 import {io} from 'socket.io-client';
 
 export abstract class SocketIOService {
-  static socket = io(window.location.origin, {
+  private static defaultPort: number = 6970;
+  static socket = io((window.location.origin.match(/http:\/\/localhost:.*/)) ?
+    "http://localhost:" + SocketIOService.defaultPort + "/" :
+    window.location.origin, {
     'reconnectionDelay': 2500,
     "reconnectionAttempts": 100
   });

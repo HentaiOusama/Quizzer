@@ -17,7 +17,7 @@ const routes: Routes = [
   {path: 'user/signup', component: SignUpComponent},
   {path: 'user/signup-success', component: SignUpSuccessComponent},
   {path: 'user/verify/:jwtToken', component: VerifyComponent},
-  {path: '**', redirectTo: 'home', component: HomeWindowComponent}
+  {path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({

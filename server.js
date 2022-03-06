@@ -68,7 +68,15 @@ process.on("SIGINT", shutdownHandler);
 process.on("SIGTERM", shutdownHandler);
 process.stdin.resume();
 
-const io = new Server(httpServer);
+/**
+ * @type {Server}
+ */
+const io = (process.env["NODE_ENV"] === 'production') ? new Server(httpServer) : new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:4200",
+    methods: ["GET", "POST"]
+  }
+});
 
 // --- SERVE NODE MODULES --- //
 app.get('/node_modules/*.*', (req, res) => {

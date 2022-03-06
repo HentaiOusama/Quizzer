@@ -6,6 +6,7 @@
   },
   "scripts": {
     "ng": "ng",
+    "angular-cli": "ng serve --open",
     "server": "node server",
     "build": "ng build --prod",
     "start": "npm run -s build && npm run -s server",
