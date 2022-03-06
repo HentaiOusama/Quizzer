@@ -2,8 +2,14 @@
 'color': currentTheme.onBackground
 }">
 
-  <div class="LoadingImageDiv" *ngIf="showLoader else mainWindow">
-    <img src="../assets/animations/Loading.svg" alt="...LOADING...">
+  <div class="CenterRowFlex LoadingImageDiv" *ngIf="showLoader else mainWindow">
+    <div style="width: fit-content; height: fit-content;">
+      <div class="cssLoad-TripleBlade">
+        <div class="cssLoad-TripleBlade-Inner cssLoad-TB-one"></div>
+        <div class="cssLoad-TripleBlade-Inner cssLoad-TB-two"></div>
+        <div class="cssLoad-TripleBlade-Inner cssLoad-TB-three"></div>
+      </div>
+    </div>
   </div>
 
   <ng-template #mainWindow>
