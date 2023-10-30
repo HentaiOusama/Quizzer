@@ -7,10 +7,12 @@ import {SignUpComponent} from "../components/user/sign-up/sign-up.component";
 import {VerifyComponent} from "../components/user/verify/verify.component";
 import {SignUpSuccessComponent} from "../components/user/sign-up-success/sign-up-success.component";
 import {AdminComponent} from "../components/admin/admin.component";
+import {WaitingRoomComponent} from "../components/waiting-room/waiting-room.component";
 
 const routes: Routes = [
   {path: '', component: HomeWindowComponent},
   {path: 'home', component: HomeWindowComponent},
+  {path: 'waiting-room/:roomId', component: WaitingRoomComponent},
   {path: 'quiz', component: QuizWindowComponent},
   {path: 'admin', component: AdminComponent},
   {path: 'user/login', component: LogInComponent},

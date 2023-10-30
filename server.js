@@ -30,7 +30,9 @@ const {
   getQuizSetVersion,
   getQuizSet,
   insertNewWord,
-  closeDBConnection, getMVC, insertWordsFromFile
+  closeDBConnection,
+  getMVC,
+  insertWordsFromFile
 } = require('./private/DBHandler');
 const {
   initializeUserHandler,
@@ -40,6 +42,10 @@ const {
   logOutUser, signUpNewUser,
   verifyNewUser
 } = require('./private/UserHandler');
+const {
+  addPlayerToRoom,
+  getAllPlayersInRoom
+} = require('./private/CompetitionHandler');
 const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
@@ -194,6 +200,18 @@ io.on('connection', (socket) => {
       "quizSetVersion": getQuizSetVersion(),
       "quizSet": getQuizSet()
     });
+  });
+
+  socket.on('addPlayerToRoom', (data) => {
+    if (typeof data["playerAddress"] === "string" && typeof data["roomId"] === "string") {
+      let result = addPlayerToRoom(socket.id, data["playerAddress"], data["roomId"]);
+      if (result) {
+        socket.join(data["roomId"]);
+        io.to(data["roomId"]).emit('newPlayerJoinedRoom', getAllPlayersInRoom(data["roomId"]));
+      } else {
+        socket.emit('addPlayerPaymentNotComplete');
+      }
+    }
   });
 
   socket.on('disconnect', () => {

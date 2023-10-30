@@ -1,0 +1,93 @@
+<div class="CenterRowFlex Root-Container">
+  <div class="WRW-Wrapper" [ngStyle]="{
+  'background-color': appComponent.currentTheme.surface,
+  'color': appComponent.currentTheme.onSurface,
+  'border-color': appComponent.currentTheme.bsBorder
+  }">
+
+    <div class="CenterColumnFlex" style="width: 100%; height: 100%;"
+         *ngIf="isWaitingForServerResponse; else WRW_Main_Holder;">
+      <img src="assets/animations/Loading.svg" alt="...LOADING...">
+
+      <div style="height: 5%;"></div>
+
+      <div style="font-size: 2em;" [ngStyle]="{
+      'color': appComponent.currentTheme.onSubSurface
+      }">
+        Loading...
+      </div>
+    </div>
+
+    <ng-template #WRW_Main_Holder>
+      <div class="CenterColumnFlex WRW-SubContainer" *ngIf="hasCompletedPayment; else PaymentTemplate;">
+
+        <div class="CenterRowFlex WRW-Header" [ngStyle]="{
+        'color': appComponent.currentTheme.onSubSurface
+        }">
+          Gathering Players
+        </div>
+
+        <div class="WRW-PlayerElementHolder">
+          <div class="CenterRowFlex WRW-PlayerElement" *ngFor="let player of playersInGame; let i = index">
+            <div class="CenterRowFlex" style="height: 100%; width: 5%; text-align: center;">
+              {{i + 1}}.
+            </div>
+            <div class="CenterRowFlex" style="height: 100%; width: 95%; justify-content: flex-start;">
+              &nbsp;&nbsp;{{player}}
+            </div>
+          </div>
+        </div>
+
+        <div class="CenterRowFlex WRW-ButtonHolder">
+          <button class="WRW-Button" (click)="onCopyInviteLinkClick();" [ngStyle]="{
+          'background-color': appComponent.currentTheme.primary,
+          'border-color': appComponent.currentTheme.pstBorder,
+          'color': appComponent.currentTheme.onPrimary
+          }">
+            {{copyButtonText}}
+          </button>
+        </div>
+
+      </div>
+
+      <ng-template #PaymentTemplate>
+        <div class="CenterColumnFlex WRW-SubContainer">
+
+          <div class="CenterRowFlex WRW-Header" [ngStyle]="{
+        'color': appComponent.currentTheme.onSubSurface
+        }">
+            Please complete the payment to join the competition.
+          </div>
+
+          <div class="CenterRowFlex WRW-PaymentAmount">
+            Amount:&nbsp;&nbsp;&nbsp;{{paymentAmount}} {{paymentCurrency}}
+          </div>
+
+          <div class="CenterRowFlex WRW-ButtonHolder">
+            <button class="WRW-Button" (click)="onClickCancel();" [ngStyle]="{
+          'background-color': appComponent.currentTheme.primary,
+          'border-color': appComponent.currentTheme.pstBorder,
+          'color': appComponent.currentTheme.onPrimary
+          }">
+              Cancel
+            </button>
+
+            <div style="height: 100%; width: 10%;">
+
+            </div>
+
+            <button class="WRW-Button" (click)="onPayButtonClick();" [ngStyle]="{
+          'background-color': appComponent.currentTheme.primary,
+          'border-color': appComponent.currentTheme.pstBorder,
+          'color': appComponent.currentTheme.onPrimary
+          }">
+              {{userAddress ? "Pay" : "Connect Wallet"}}
+            </button>
+          </div>
+
+        </div>
+      </ng-template>
+    </ng-template>
+
+  </div>
+</div>

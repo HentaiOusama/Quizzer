@@ -13,6 +13,7 @@ import {SignUpComponent} from './components/user/sign-up/sign-up.component';
 import {VerifyComponent} from './components/user/verify/verify.component';
 import {SignUpSuccessComponent} from './components/user/sign-up-success/sign-up-success.component';
 import {AdminComponent} from './components/admin/admin.component';
+import {WaitingRoomComponent} from "./components/waiting-room/waiting-room.component";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {AdminComponent} from './components/admin/admin.component';
     SignUpComponent,
     VerifyComponent,
     SignUpSuccessComponent,
-    AdminComponent
+    AdminComponent,
+    WaitingRoomComponent
   ],
   imports: [
     BrowserModule,
